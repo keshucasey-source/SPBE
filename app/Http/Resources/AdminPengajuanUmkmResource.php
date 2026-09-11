@@ -174,9 +174,7 @@ class AdminPengajuanUmkmResource extends JsonResource
                                     $riwayat->changed_by,
 
                                 'petugas' =>
-                                    $riwayat->relationLoaded(
-                                        'changedBy'
-                                    )
+                                    $riwayat->changedBy
                                         ? [
                                             'id' =>
                                                 $riwayat
