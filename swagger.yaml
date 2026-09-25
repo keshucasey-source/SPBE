@@ -1,0 +1,4884 @@
+openapi: 3.0.3
+
+info:
+  title: SPBE Desa Sumberporong API
+  description: Dokumentasi REST API Sistem Pelayanan Berbasis Elektronik Desa Sumberporong.
+  version: 1.0.0
+
+servers:
+  - url: https://spbe-production.up.railway.app/api
+    description: Production Server
+
+tags:
+  - name: Authentication
+    description: Autentikasi dan manajemen profil pengguna
+
+  - name: Admin Dashboard
+    description: Dashboard Admin
+
+  - name: Super Admin Dashboard
+    description: Dashboard Super Admin
+
+  - name: Public Berita
+    description: Berita yang tersedia untuk publik
+
+  - name: Public Galeri
+    description: Galeri yang tersedia untuk publik
+
+  - name: Public UMKM
+    description: UMKM yang tersedia untuk publik
+
+  - name: Public Sambutan
+    description: Sambutan Kepala Desa
+
+  - name: Public Statistik
+    description: Statistik Desa
+
+  - name: Public Perangkat Desa
+    description: Perangkat Desa yang aktif
+
+  - name: Public Hero
+    description: Hero atau banner utama website
+
+  - name: Public Kritik & Saran
+    description: Kritik dan saran masyarakat
+
+  - name: Pengajuan KTP
+    description: Pengajuan KTP dan akses dokumen KTP untuk user
+
+  - name: Pengajuan SKU
+    description: Pengajuan Surat Keterangan Usaha dan akses dokumen SKU untuk user
+
+  - name: Pengajuan UMKM
+    description: Pengajuan, pengelolaan, dan akses dokumen UMKM milik user
+
+  - name: Pengaduan
+    description: Pengaduan masyarakat dan akses file pengaduan milik user
+
+  - name: Admin Pengajuan KTP
+    description: Manajemen pengajuan KTP oleh Admin dan Super Admin
+
+  - name: Admin Pengajuan SKU
+    description: Manajemen pengajuan SKU oleh Admin dan Super Admin
+
+  - name: Admin Pengajuan UMKM
+    description: Manajemen pengajuan UMKM oleh Admin dan Super Admin
+
+  - name: Admin Pengaduan
+    description: Manajemen pengaduan masyarakat oleh Admin dan Super Admin
+
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+      description: Masukkan access token Sanctum dengan format Bearer {token}
+
+
+  schemas:
+
+    UserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+
+        name:
+          type: string
+          example: user
+
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+
+        name:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        email:
+          type: string
+          format: email
+          example: ahmadalfind02@gmail.com
+
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+        is_active:
+          type: boolean
+          example: true
+
+
+    Berita:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        judul:
+          type: string
+          example: Pelayanan Digital Desa Sumberporong
+
+        slug:
+          type: string
+          example: pelayanan-digital-desa-sumberporong
+
+        isi:
+          type: string
+          example: Informasi mengenai pelayanan digital Desa Sumberporong.
+
+        status:
+          type: string
+          enum:
+            - published
+          example: published
+
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-10T10:30:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-10T10:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-10T10:30:00.000000Z'
+
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+          description: URL thumbnail berita yang dapat diakses publik.
+          example: https://spbe-production.up.railway.app/api/files/public/berita/1
+
+        admin_thumbnail:
+          type: string
+          format: uri
+          nullable: true
+          description: URL thumbnail untuk Admin atau Super Admin.
+          example: https://spbe-production.up.railway.app/api/admin/files/berita/1
+
+        created_by:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 2
+
+            name:
+              type: string
+              nullable: true
+              example: Admin Desa
+
+        updated_by:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 2
+
+            name:
+              type: string
+              nullable: true
+              example: Admin Desa
+
+
+    Galeri:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        foto:
+          type: string
+          format: uri
+          description: URL foto galeri yang dapat diakses publik.
+          example: https://spbe-production.up.railway.app/api/files/public/galeri/1
+
+        file_path:
+          type: string
+          nullable: true
+          description: Path file pada storage backend.
+          example: galeri/qAttHg2ngogpIsNBDAjOGcLCZTKkCuulKgaCbsVE.jpg
+
+        created_by:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 2
+
+            name:
+              type: string
+              nullable: true
+              example: Admin Desa
+
+        updated_by:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 2
+
+            name:
+              type: string
+              nullable: true
+              example: Admin Desa
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:42:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:42:00.000000Z'
+
+
+    UmkmPublic:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        nama_umkm:
+          type: string
+          example: Warung Ambarukmo
+
+        kategori:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 1
+
+            nama:
+              type: string
+              nullable: true
+              example: Kuliner
+
+        deskripsi_umkm:
+          type: string
+          nullable: true
+          example: Warung makan dengan menu tradisional khas desa.
+
+        harga_min:
+          type: number
+          format: double
+          nullable: true
+          example: 10000
+
+        harga_max:
+          type: number
+          format: double
+          nullable: true
+          example: 25000
+
+        alamat:
+          type: string
+          nullable: true
+          example: Desa Sumberporong, Kecamatan Lawang, Kabupaten Malang
+
+        jam_buka_mulai:
+          type: string
+          nullable: true
+          example: '08:00'
+
+        jam_buka_selesai:
+          type: string
+          nullable: true
+          example: '21:00'
+
+        nomor_wa:
+          type: string
+          nullable: true
+          example: '6281234567890'
+
+        link_ecommerce:
+          type: string
+          format: uri
+          nullable: true
+          example: https://tokopedia.com/warung-ambarukmo
+
+        status:
+          type: string
+          example: disetujui
+
+        is_active:
+          type: boolean
+          example: true
+
+        foto:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+
+              urutan:
+                type: integer
+                example: 1
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/files/public/umkm/1
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-10T10:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-10T10:30:00.000000Z'
+
+
+    Sambutan:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        foto:
+          type: string
+          nullable: true
+          example: sambutan/kepala-desa.jpg
+
+        nama:
+          type: string
+          example: Kepala Desa Sumberporong
+
+        jabatan:
+          type: string
+          example: Kepala Desa
+
+        text:
+          type: string
+          example: Selamat datang di website resmi Desa Sumberporong.
+
+        created_by:
+          type: integer
+          nullable: true
+          example: 2
+
+        updated_by:
+          type: integer
+          nullable: true
+          example: 2
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:30:00.000000Z'
+
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+        createdBy:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 2
+
+            name:
+              type: string
+              example: Admin Desa
+
+        updatedBy:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 2
+
+            name:
+              type: string
+              example: Admin Desa
+
+
+    StatistikDesa:
+      type: object
+      properties:
+        tahun:
+          type: integer
+          example: 2026
+
+        total_penduduk:
+          type: integer
+          example: 8500
+
+        total_kk:
+          type: integer
+          example: 2750
+
+        total_laki_laki:
+          type: integer
+          example: 4300
+
+        total_perempuan:
+          type: integer
+          example: 4200
+
+        total_pkh:
+          type: integer
+          example: 450
+
+        total_blt_dd:
+          type: integer
+          example: 320
+
+        total_bpnt:
+          type: integer
+          example: 580
+
+        usia_0_14:
+          type: integer
+          example: 1450
+
+        usia_15_64:
+          type: integer
+          example: 5750
+
+        usia_65_plus:
+          type: integer
+          example: 1300
+
+        idm_nilai:
+          type: number
+          format: double
+          nullable: true
+          example: 0.8125
+
+        idm_status:
+          type: string
+          nullable: true
+          example: Maju
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:30:00.000000Z'
+
+
+    PerangkatDesa:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        nama:
+          type: string
+          example: Budi Santoso
+
+        jabatan:
+          type: string
+          example: Kepala Desa
+
+        foto:
+          type: string
+          format: uri
+          nullable: true
+          example: https://spbe-production.up.railway.app/api/files/public/perangkat-desa/1
+
+        urutan:
+          type: integer
+          example: 1
+
+        is_active:
+          type: boolean
+          example: true
+
+        updated_by:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              nullable: true
+              example: 2
+
+            name:
+              type: string
+              nullable: true
+              example: Admin Desa
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-13T09:30:00.000000Z'
+
+
+    Hero:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        title:
+          type: string
+          nullable: true
+          example: Selamat Datang di Desa Sumberporong
+
+        subtitle:
+          type: string
+          nullable: true
+          example: Website Resmi Desa Sumberporong
+
+        urutan:
+          type: integer
+          example: 1
+
+        is_active:
+          type: boolean
+          example: true
+
+        image_url:
+          type: string
+          format: uri
+          example: https://spbe-production.up.railway.app/api/files/public/hero/1
+
+        berita:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 1
+
+            judul:
+              type: string
+              example: Pelayanan Digital Desa Sumberporong
+
+            slug:
+              type: string
+              example: pelayanan-digital-desa-sumberporong
+
+
+    KritikSaran:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        nama:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        email:
+          type: string
+          format: email
+          example: ahmadalfind02@gmail.com
+
+        pesan:
+          type: string
+          example: Pelayanan di kantor desa sudah baik, tetapi jam pelayanan dapat ditambah.
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T10:30:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T10:30:00.000000Z'
+
+
+    PengajuanKtp:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 15
+
+        jenis_permohonan:
+          type: string
+          enum:
+            - baru
+            - hilang
+            - perpanjangan
+          example: baru
+
+        nik:
+          type: string
+          example: '3573********0001'
+
+        nama_lengkap:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor_kk:
+          type: string
+          example: '3573********0002'
+
+        tempat_lahir:
+          type: string
+          example: Malang
+
+        tanggal_lahir:
+          type: string
+          format: date
+          nullable: true
+          example: '2003-11-27'
+
+        jenis_kelamin:
+          type: string
+          enum:
+            - L
+            - P
+          example: L
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 10
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        kode_pos:
+          type: string
+          example: '65216'
+
+        keperluan:
+          type: string
+          example: Pembuatan KTP baru
+
+        status:
+          type: string
+          example: menunggu_verifikasi
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen lengkap dan sedang diverifikasi.
+
+        no_antrian:
+          type: string
+          nullable: true
+          example: KTP-20260914-A1B2C
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        visit_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-09-16'
+
+        visit_date_label:
+          type: string
+          nullable: true
+          example: Rabu, 16 September 2026
+
+        service_hours:
+          type: object
+          properties:
+            start:
+              type: string
+              example: '08:30'
+
+            end:
+              type: string
+              example: '13:00'
+
+            label:
+              type: string
+              example: 08.30–13.00 WIB
+
+        expired_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-10-14T13:00:00.000000Z'
+
+        expired_date:
+          type: string
+          nullable: true
+          example: 14 Oktober 2026
+
+        expired_time:
+          type: string
+          nullable: true
+          example: '13:00'
+
+        expired_datetime_label:
+          type: string
+          nullable: true
+          example: 14 Oktober 2026 13:00
+
+        is_expired:
+          type: boolean
+          example: false
+
+        eligibility:
+          type: string
+          nullable: true
+          enum:
+            - active
+            - expired
+          example: active
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 20
+
+              jenis_dokumen:
+                type: string
+                enum:
+                  - kk
+                  - akta_kelahiran
+                  - ijazah
+                  - ktp_lama
+                  - pengantar_rt_rw
+                  - surat_kehilangan_polsek
+                example: kk
+
+              nama_file:
+                type: string
+                example: kartu_keluarga.pdf
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/files/ktp/20
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 25
+
+              status:
+                type: string
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan KTP berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T07:30:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:30:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    PengajuanSku:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+
+        nik:
+          type: string
+          example: '3573********0001'
+
+        nama_lengkap:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor_kk:
+          type: string
+          example: '3573********0002'
+
+        tempat_lahir:
+          type: string
+          example: Malang
+
+        tanggal_lahir:
+          type: string
+          format: date
+          nullable: true
+          example: '2003-11-27'
+
+        jenis_kelamin:
+          type: string
+          enum:
+            - L
+            - P
+          example: L
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 10
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        kode_pos:
+          type: string
+          example: '65216'
+
+        nama_usaha:
+          type: string
+          example: Warung Ambarukmo
+
+        jenis_usaha:
+          type: string
+          example: Kuliner
+
+        deskripsi_usaha:
+          type: string
+          example: Usaha makanan dan minuman rumahan.
+
+        alamat_usaha:
+          type: string
+          example: Jalan Raya Sumberporong No. 15
+
+        rt_usaha:
+          type: string
+          example: '004'
+
+        rw_usaha:
+          type: string
+          example: '002'
+
+        lama_menjalankan_usaha:
+          type: integer
+          example: 3
+
+        perkiraan_penghasilan_per_bulan:
+          type: string
+          example: Rp5.000.000 - Rp10.000.000
+
+        status:
+          type: string
+          example: menunggu_verifikasi
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen sedang diverifikasi.
+
+        no_antrian:
+          type: string
+          nullable: true
+          example: SKU-20260914-A1B2C
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        visit_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-09-16'
+
+        visit_date_label:
+          type: string
+          nullable: true
+          example: Rabu, 16 September 2026
+
+        service_hours:
+          type: object
+          properties:
+            start:
+              type: string
+              example: '08:30'
+
+            end:
+              type: string
+              example: '13:00'
+
+            label:
+              type: string
+              example: 08.30–13.00 WIB
+
+        expired_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-10-14T13:00:00.000000Z'
+
+        expired_date:
+          type: string
+          nullable: true
+          example: 14 Oktober 2026
+
+        is_expired:
+          type: boolean
+          example: false
+
+        eligibility:
+          type: string
+          nullable: true
+          enum:
+            - active
+            - expired
+          example: active
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 20
+
+              jenis_dokumen:
+                type: string
+                enum:
+                  - ktp
+                  - kk
+                  - foto_tempat_usaha
+                example: ktp
+
+              nama_file:
+                type: string
+                example: ktp.jpg
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/files/sku/20
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 25
+
+              status:
+                type: string
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan SKU berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T07:30:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:30:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    PengajuanUmkm:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        nama_umkm:
+          type: string
+          example: Warung Ambarukmo
+
+        kategori:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 1
+
+            nama:
+              type: string
+              example: Kuliner
+
+        deskripsi_umkm:
+          type: string
+          example: Usaha makanan dan minuman rumahan.
+
+        harga_min:
+          type: number
+          format: double
+          example: 10000
+
+        harga_max:
+          type: number
+          format: double
+          example: 25000
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 15
+
+        jam_buka_mulai:
+          type: string
+          nullable: true
+          example: '08:00'
+
+        jam_buka_selesai:
+          type: string
+          nullable: true
+          example: '21:00'
+
+        nomor_wa:
+          type: string
+          example: '6281234567890'
+
+        link_ecommerce:
+          type: string
+          format: uri
+          nullable: true
+          example: https://tokopedia.com/warung-ambarukmo
+
+        status:
+          type: string
+          example: menunggu_verifikasi
+
+        is_active:
+          type: boolean
+          example: false
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen sedang diverifikasi.
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        foto:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 3
+
+              urutan:
+                type: integer
+                example: 1
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/files/umkm/3
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 10
+
+              status:
+                type: string
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan UMKM berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T08:00:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:55:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    Pengaduan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+
+        nama:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor:
+          type: string
+          example: '08********90'
+
+        subjek:
+          type: string
+          example: Lampu jalan mati
+
+        keterangan:
+          type: string
+          example: Lampu penerangan jalan di RT 003 sudah mati sejak beberapa hari.
+
+        lokasi:
+          type: string
+          example: Jalan Raya Sumberporong RT 003 RW 002
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        foto_bukti:
+          type: object
+          nullable: true
+          properties:
+            tersedia:
+              type: boolean
+              example: true
+
+            url:
+              type: string
+              format: uri
+              example: https://spbe-production.up.railway.app/api/files/pengaduan/5/foto
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 12
+
+              nama_file:
+                type: string
+                example: bukti_pendukung.pdf
+
+              tersedia:
+                type: boolean
+                example: true
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/files/pengaduan/12
+
+        status:
+          type: string
+          enum:
+            - terkirim
+            - diteruskan
+            - selesai
+          example: terkirim
+
+        respon:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 7
+
+              respon:
+                type: string
+                example: Laporan telah diterima dan akan segera ditindaklanjuti.
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T10:30:00.000000Z'
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 8
+
+              status:
+                type: string
+                example: terkirim
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengaduan berhasil dikirim.
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T10:00:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T10:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T10:30:00.000000Z'
+
+
+    AdminPengajuanKtp:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 15
+
+        jenis_permohonan:
+          type: string
+          enum:
+            - baru
+            - hilang
+            - perpanjangan
+          example: baru
+
+        nik:
+          type: string
+          example: '3573010101010001'
+
+        nama_lengkap:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor_kk:
+          type: string
+          example: '3573010101010002'
+
+        tempat_lahir:
+          type: string
+          example: Malang
+
+        tanggal_lahir:
+          type: string
+          format: date
+          nullable: true
+          example: '2003-11-27'
+
+        jenis_kelamin:
+          type: string
+          enum:
+            - L
+            - P
+          example: L
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 10
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        kode_pos:
+          type: string
+          example: '65216'
+
+        keperluan:
+          type: string
+          example: Pembuatan KTP baru
+
+        status:
+          type: string
+          enum:
+            - menunggu_verifikasi
+            - diproses
+            - disetujui
+            - ditolak
+          example: menunggu_verifikasi
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen sedang diverifikasi.
+
+        no_antrian:
+          type: string
+          nullable: true
+          example: KTP-20260914-A1B2C
+
+        approved_by:
+          type: integer
+          nullable: true
+          example: 2
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        visit_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-09-15'
+
+        visit_date_label:
+          type: string
+          nullable: true
+          example: Selasa, 15 September 2026
+
+        service_hours:
+          type: object
+          properties:
+            start:
+              type: string
+              example: '08:30'
+
+            end:
+              type: string
+              example: '13:00'
+
+            label:
+              type: string
+              example: 08.30–13.00 WIB
+
+        expired_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-22T13:00:00.000000Z'
+
+        expired_date:
+          type: string
+          nullable: true
+          example: 22 September 2026
+
+        expired_time:
+          type: string
+          nullable: true
+          example: '13:00'
+
+        expired_datetime_label:
+          type: string
+          nullable: true
+          example: 22 September 2026 13:00
+
+        is_expired:
+          type: boolean
+          example: false
+
+        eligibility:
+          type: string
+          nullable: true
+          enum:
+            - active
+            - expired
+          example: active
+
+        user:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 3
+
+            name:
+              type: string
+              example: Ahmad Alfin Dahlin
+
+            email:
+              type: string
+              format: email
+              example: ahmadalfind02@gmail.com
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 20
+
+              jenis_dokumen:
+                type: string
+                enum:
+                  - kk
+                  - akta_kelahiran
+                  - ijazah
+                  - ktp_lama
+                  - pengantar_rt_rw
+                  - surat_kehilangan_polsek
+                example: kk
+
+              nama_file:
+                type: string
+                example: kartu_keluarga.pdf
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/admin/files/ktp/20
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 25
+
+              status:
+                type: string
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan KTP berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T07:30:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:30:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    AdminPengajuanSku:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+
+        nik:
+          type: string
+          example: '3573010101010001'
+
+        nama_lengkap:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor_kk:
+          type: string
+          example: '3573010101010002'
+
+        tempat_lahir:
+          type: string
+          example: Malang
+
+        tanggal_lahir:
+          type: string
+          format: date
+          nullable: true
+          example: '2003-11-27'
+
+        jenis_kelamin:
+          type: string
+          enum:
+            - L
+            - P
+          example: L
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 10
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        kode_pos:
+          type: string
+          example: '65216'
+
+        nama_usaha:
+          type: string
+          example: Warung Ambarukmo
+
+        jenis_usaha:
+          type: string
+          example: Kuliner
+
+        deskripsi_usaha:
+          type: string
+          example: Usaha makanan dan minuman rumahan.
+
+        alamat_usaha:
+          type: string
+          example: Jalan Raya Sumberporong No. 15
+
+        rt_usaha:
+          type: string
+          example: '004'
+
+        rw_usaha:
+          type: string
+          example: '002'
+
+        lama_menjalankan_usaha:
+          type: integer
+          example: 3
+
+        perkiraan_penghasilan_per_bulan:
+          type: string
+          example: Rp5.000.000 - Rp10.000.000
+
+        status:
+          type: string
+          enum:
+            - menunggu_verifikasi
+            - diproses
+            - disetujui
+            - ditolak
+          example: menunggu_verifikasi
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen sedang diverifikasi.
+
+        no_antrian:
+          type: string
+          nullable: true
+          example: SKU-20260914-A1B2C
+
+        approved_by:
+          type: integer
+          nullable: true
+          example: 2
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        visit_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-09-15'
+
+        visit_date_label:
+          type: string
+          nullable: true
+          example: Selasa, 15 September 2026
+
+        service_hours:
+          type: object
+          properties:
+            start:
+              type: string
+              example: '08:30'
+
+            end:
+              type: string
+              example: '13:00'
+
+            label:
+              type: string
+              example: 08.30–13.00 WIB
+
+        expired_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-22T13:00:00.000000Z'
+
+        expired_date:
+          type: string
+          nullable: true
+          example: 22 September 2026
+
+        is_expired:
+          type: boolean
+          example: false
+
+        eligibility:
+          type: string
+          nullable: true
+          enum:
+            - active
+            - expired
+          example: active
+
+        user:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 3
+
+            name:
+              type: string
+              example: Ahmad Alfin Dahlin
+
+            email:
+              type: string
+              format: email
+              example: ahmadalfind02@gmail.com
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 20
+
+              jenis_dokumen:
+                type: string
+                enum:
+                  - ktp
+                  - kk
+                  - foto_tempat_usaha
+                example: ktp
+
+              nama_file:
+                type: string
+                example: ktp.jpg
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/admin/files/sku/20
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 25
+
+              status:
+                type: string
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan SKU berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T07:30:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:30:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    AdminPengajuanUmkm:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        nama_umkm:
+          type: string
+          example: Warung Ambarukmo
+
+        kategori:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 1
+
+            nama:
+              type: string
+              example: Kuliner
+
+        deskripsi_umkm:
+          type: string
+          example: Usaha makanan dan minuman rumahan.
+
+        harga_min:
+          type: number
+          format: double
+          example: 10000
+
+        harga_max:
+          type: number
+          format: double
+          example: 25000
+
+        alamat:
+          type: string
+          example: Jalan Raya Sumberporong No. 15
+
+        jam_buka_mulai:
+          type: string
+          nullable: true
+          example: '08:00'
+
+        jam_buka_selesai:
+          type: string
+          nullable: true
+          example: '21:00'
+
+        nomor_wa:
+          type: string
+          example: '6281234567890'
+
+        link_ecommerce:
+          type: string
+          format: uri
+          nullable: true
+          example: https://tokopedia.com/warung-ambarukmo
+
+        status:
+          type: string
+          enum:
+            - menunggu_verifikasi
+            - diproses
+            - disetujui
+            - ditolak
+          example: menunggu_verifikasi
+
+        is_active:
+          type: boolean
+          example: false
+
+        catatan_admin:
+          type: string
+          nullable: true
+          example: Dokumen sedang diverifikasi.
+
+        approved_by:
+          type: integer
+          nullable: true
+          example: 2
+
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+        user:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 3
+
+            name:
+              type: string
+              example: Ahmad Alfin Dahlin
+
+            email:
+              type: string
+              format: email
+              example: ahmadalfind02@gmail.com
+
+        foto:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 3
+
+              urutan:
+                type: integer
+                example: 1
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/admin/files/umkm/3
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 10
+
+              status:
+                type: string
+                enum:
+                  - menunggu_verifikasi
+                  - diproses
+                  - disetujui
+                  - ditolak
+                example: menunggu_verifikasi
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengajuan UMKM berhasil dibuat.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 3
+
+              petugas:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+
+                  name:
+                    type: string
+                    example: Admin Desa
+
+                  email:
+                    type: string
+                    format: email
+                    example: admin@sumberporong.my.id
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T08:00:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T07:55:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T08:00:00.000000Z'
+
+
+    AdminPengaduan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+
+        nama:
+          type: string
+          example: Ahmad Alfin Dahlin
+
+        nomor:
+          type: string
+          example: '081234567890'
+
+        subjek:
+          type: string
+          example: Lampu jalan mati
+
+        keterangan:
+          type: string
+          example: Lampu penerangan jalan di RT 003 sudah mati sejak beberapa hari.
+
+        lokasi:
+          type: string
+          example: Jalan Raya Sumberporong RT 003 RW 002
+
+        rt:
+          type: string
+          example: '003'
+
+        rw:
+          type: string
+          example: '002'
+
+        user:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              example: 3
+
+            name:
+              type: string
+              example: Ahmad Alfin Dahlin
+
+            email:
+              type: string
+              format: email
+              example: ahmadalfind02@gmail.com
+
+        foto_bukti:
+          type: object
+          nullable: true
+          properties:
+            tersedia:
+              type: boolean
+              example: true
+
+            url:
+              type: string
+              format: uri
+              example: https://spbe-production.up.railway.app/api/admin/files/pengaduan/5/foto
+
+        dokumen:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 12
+
+              nama_file:
+                type: string
+                example: bukti_pendukung.pdf
+
+              url:
+                type: string
+                format: uri
+                example: https://spbe-production.up.railway.app/api/admin/files/pengaduan/12
+
+        status:
+          type: string
+          enum:
+            - terkirim
+            - diteruskan
+            - selesai
+          example: terkirim
+
+        respon:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 7
+
+              user_id:
+                type: integer
+                example: 2
+
+              petugas:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+
+                  name:
+                    type: string
+                    example: Admin Desa
+
+                  email:
+                    type: string
+                    format: email
+                    example: admin@sumberporong.my.id
+
+              respon:
+                type: string
+                example: Laporan telah diterima dan akan segera ditindaklanjuti.
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T10:30:00.000000Z'
+
+        riwayat:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 8
+
+              status:
+                type: string
+                enum:
+                  - terkirim
+                  - diteruskan
+                  - selesai
+                example: diteruskan
+
+              catatan:
+                type: string
+                nullable: true
+                example: Pengaduan telah diteruskan kepada petugas terkait.
+
+              changed_by:
+                type: integer
+                nullable: true
+                example: 2
+
+              petugas:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+
+                  name:
+                    type: string
+                    example: Admin Desa
+
+                  email:
+                    type: string
+                    format: email
+                    example: admin@sumberporong.my.id
+
+              created_at:
+                type: string
+                format: date-time
+                nullable: true
+                example: '2026-09-14T11:00:00.000000Z'
+
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T10:00:00.000000Z'
+
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-09-14T11:00:00.000000Z'
+
+
+paths:
+
+  # ==========================================================================
+  # AUTHENTICATION
+  # ==========================================================================
+
+  /register:
+    post:
+      tags:
+        - Authentication
+
+      summary: Registrasi masyarakat
+
+      description: Membuat akun masyarakat baru.
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: Ahmad Alfin Dahlin
+
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: ahmadalfind02@gmail.com
+
+                password:
+                  type: string
+                  format: password
+                  example: Password123!
+
+                password_confirmation:
+                  type: string
+                  format: password
+                  example: Password123!
+
+      responses:
+
+        '201':
+          description: Registrasi berhasil.
+
+        '422':
+          description: Validasi gagal.
+
+
+  /login:
+    post:
+      tags:
+        - Authentication
+
+      summary: Login
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - email
+                - password
+
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@sumberporong.my.id
+
+                password:
+                  type: string
+                  format: password
+                  example: Password123!
+
+      responses:
+
+        '200':
+          description: Login berhasil.
+
+        '403':
+          description: Akun dinonaktifkan.
+
+        '422':
+          description: Email atau password salah.
+
+
+  /forgot-password:
+    post:
+      tags:
+        - Authentication
+
+      summary: Meminta reset password
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - email
+
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: ahmadalfind02@gmail.com
+
+      responses:
+
+        '200':
+          description: Permintaan reset password diproses.
+
+        '422':
+          description: Validasi email gagal.
+
+
+  /reset-password:
+    post:
+      tags:
+        - Authentication
+
+      summary: Reset password
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+
+              properties:
+                token:
+                  type: string
+                  example: reset-token-example
+
+                email:
+                  type: string
+                  format: email
+                  example: ahmadalfind02@gmail.com
+
+                password:
+                  type: string
+                  format: password
+                  example: NewPassword123!
+
+                password_confirmation:
+                  type: string
+                  format: password
+                  example: NewPassword123!
+
+      responses:
+
+        '200':
+          description: Password berhasil diubah.
+
+        '403':
+          description: Akun tidak aktif.
+
+        '422':
+          description: Token tidak valid atau validasi gagal.
+
+
+  /logout:
+    post:
+      tags:
+        - Authentication
+
+      summary: Logout
+
+      security:
+        - bearerAuth: []
+
+      responses:
+
+        '200':
+          description: Logout berhasil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+
+  /user:
+    get:
+      tags:
+        - Authentication
+
+      summary: Mendapatkan user yang sedang login
+
+      security:
+        - bearerAuth: []
+
+      responses:
+
+        '200':
+          description: Data user berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+
+  /profile:
+    patch:
+      tags:
+        - Authentication
+
+      summary: Memperbarui profil user
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - name
+                - email
+
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: Ahmad Alfin Dahlin
+
+                email:
+                  type: string
+                  format: email
+                  example: ahmadalfind02@gmail.com
+
+                current_password:
+                  type: string
+                  format: password
+
+                new_password:
+                  type: string
+                  format: password
+
+                new_password_confirmation:
+                  type: string
+                  format: password
+
+      responses:
+
+        '200':
+          description: Profil berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Akses ditolak.
+
+        '422':
+          description: Validasi gagal.
+
+
+  # ==========================================================================
+  # DASHBOARD
+  # ==========================================================================
+
+  /admin/dashboard:
+    get:
+      tags:
+        - Admin Dashboard
+
+      summary: Mendapatkan statistik dashboard Admin
+
+      security:
+        - bearerAuth: []
+
+      responses:
+
+        '200':
+          description: Dashboard berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses sebagai Admin atau Super Admin.
+
+
+  /superadmin/dashboard:
+    get:
+      tags:
+        - Super Admin Dashboard
+
+      summary: Mendapatkan statistik dashboard Super Admin
+
+      security:
+        - bearerAuth: []
+
+      responses:
+
+        '200':
+          description: Dashboard Super Admin berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses sebagai Super Admin.
+
+
+  # ==========================================================================
+  # PUBLIC
+  # ==========================================================================
+
+  /berita:
+    get:
+      tags:
+        - Public Berita
+
+      summary: Mendapatkan daftar berita
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar berita berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Daftar berita berhasil diambil.
+
+                  data:
+                    type: object
+
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Berita'
+
+                      current_page:
+                        type: integer
+                        example: 1
+
+                      last_page:
+                        type: integer
+                        example: 3
+
+                      per_page:
+                        type: integer
+                        example: 12
+
+                      total:
+                        type: integer
+                        example: 25
+
+
+  /berita/{slug}:
+    get:
+      tags:
+        - Public Berita
+
+      summary: Mendapatkan detail berita
+
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+
+          example: pelayanan-digital-desa-sumberporong
+
+      responses:
+
+        '200':
+          description: Detail berita berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Detail berita berhasil diambil.
+
+                  data:
+                    $ref: '#/components/schemas/Berita'
+
+        '404':
+          description: Berita tidak ditemukan.
+
+
+  /galeri:
+    get:
+      tags:
+        - Public Galeri
+
+      summary: Mendapatkan daftar galeri
+
+      responses:
+
+        '200':
+          description: Daftar galeri berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Daftar galeri berhasil diambil.
+
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Galeri'
+
+
+  /galeri/{galeri}:
+    get:
+      tags:
+        - Public Galeri
+
+      summary: Mendapatkan detail galeri
+
+      parameters:
+        - name: galeri
+          in: path
+          required: true
+          schema:
+            type: integer
+
+          example: 1
+
+      responses:
+
+        '200':
+          description: Detail galeri berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Detail galeri berhasil diambil.
+
+                  data:
+                    $ref: '#/components/schemas/Galeri'
+
+        '404':
+          description: Galeri tidak ditemukan.
+
+
+  /umkm:
+    get:
+      tags:
+        - Public UMKM
+
+      summary: Mendapatkan daftar UMKM
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar UMKM berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Daftar UMKM berhasil diambil.
+
+                  data:
+                    type: object
+
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UmkmPublic'
+
+                      current_page:
+                        type: integer
+                        example: 1
+
+                      last_page:
+                        type: integer
+                        example: 2
+
+                      per_page:
+                        type: integer
+                        example: 12
+
+                      total:
+                        type: integer
+                        example: 15
+
+
+  /umkm/{pengajuanUmkm}:
+    get:
+      tags:
+        - Public UMKM
+
+      summary: Mendapatkan detail UMKM
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: Detail UMKM berhasil diambil.
+
+        '404':
+          description: UMKM tidak ditemukan.
+
+
+  /sambutan:
+    get:
+      tags:
+        - Public Sambutan
+
+      summary: Mendapatkan sambutan kepala desa
+
+      responses:
+
+        '200':
+          description: Data sambutan berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  sambutan:
+                    $ref: '#/components/schemas/Sambutan'
+
+
+  /statistik:
+    get:
+      tags:
+        - Public Statistik
+
+      summary: Mendapatkan statistik desa
+
+      parameters:
+        - name: tahun
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 2026
+
+      responses:
+
+        '200':
+          description: Data statistik berhasil diambil.
+
+        '404':
+          description: Data statistik tidak tersedia.
+
+
+  /perangkat-desa:
+    get:
+      tags:
+        - Public Perangkat Desa
+
+      summary: Mendapatkan daftar perangkat desa
+
+      responses:
+
+        '200':
+          description: Daftar perangkat desa berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Daftar perangkat desa berhasil diambil.
+
+                  data:
+                    type: array
+
+                    items:
+                      $ref: '#/components/schemas/PerangkatDesa'
+
+
+  /hero:
+    get:
+      tags:
+        - Public Hero
+
+      summary: Mendapatkan daftar hero aktif
+
+      responses:
+
+        '200':
+          description: Data hero berhasil diambil.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Data hero berhasil diambil.
+
+                  data:
+                    type: array
+
+                    items:
+                      $ref: '#/components/schemas/Hero'
+
+
+  /hero/{heroSlide}:
+    get:
+      tags:
+        - Public Hero
+
+      summary: Mendapatkan detail hero
+
+      parameters:
+        - name: heroSlide
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: Detail hero berhasil diambil.
+
+        '404':
+          description: Hero tidak ditemukan.
+
+
+  /kritik-saran:
+    post:
+      tags:
+        - Public Kritik & Saran
+
+      summary: Mengirim kritik dan saran
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - nama
+                - email
+                - pesan
+
+              properties:
+                nama:
+                  type: string
+                  maxLength: 150
+                  example: Ahmad Alfin Dahlin
+
+                email:
+                  type: string
+                  format: email
+                  maxLength: 150
+                  example: ahmadalfind02@gmail.com
+
+                pesan:
+                  type: string
+                  maxLength: 5000
+                  example: Pelayanan di kantor desa sudah baik.
+
+      responses:
+
+        '201':
+          description: Kritik dan saran berhasil dikirim.
+
+        '422':
+          description: Validasi gagal.
+
+
+  # ==========================================================================
+  # USER - KTP
+  # ==========================================================================
+
+  /pengajuan/ktp:
+    get:
+      tags:
+        - Pengajuan KTP
+
+      summary: Mendapatkan riwayat pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan KTP berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+
+    post:
+      tags:
+        - Pengajuan KTP
+
+      summary: Membuat pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          multipart/form-data:
+
+            schema:
+              type: object
+
+              required:
+                - jenis_permohonan
+                - nik
+                - nama_lengkap
+                - nomor_kk
+                - tempat_lahir
+                - tanggal_lahir
+                - jenis_kelamin
+                - alamat
+                - rt
+                - rw
+                - kode_pos
+                - keperluan
+
+              properties:
+                jenis_permohonan:
+                  type: string
+                  enum:
+                    - baru
+                    - hilang
+                    - perpanjangan
+
+                nik:
+                  type: string
+                  pattern: '^[0-9]{16}$'
+
+                nama_lengkap:
+                  type: string
+                  maxLength: 100
+
+                nomor_kk:
+                  type: string
+                  pattern: '^[0-9]{16}$'
+
+                tempat_lahir:
+                  type: string
+                  maxLength: 100
+
+                tanggal_lahir:
+                  type: string
+                  format: date
+
+                jenis_kelamin:
+                  type: string
+                  enum:
+                    - L
+                    - P
+
+                alamat:
+                  type: string
+
+                rt:
+                  type: string
+                  maxLength: 5
+
+                rw:
+                  type: string
+                  maxLength: 5
+
+                kode_pos:
+                  type: string
+                  maxLength: 5
+
+                keperluan:
+                  type: string
+                  maxLength: 150
+
+                dokumen[kk]:
+                  type: string
+                  format: binary
+
+                dokumen[akta_kelahiran]:
+                  type: string
+                  format: binary
+
+                dokumen[ijazah]:
+                  type: string
+                  format: binary
+
+                dokumen[ktp_lama]:
+                  type: string
+                  format: binary
+
+                dokumen[pengantar_rt_rw]:
+                  type: string
+                  format: binary
+
+                dokumen[surat_kehilangan_polsek]:
+                  type: string
+                  format: binary
+
+      responses:
+
+        '201':
+          description: Pengajuan KTP berhasil dibuat.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: User tidak memiliki role user.
+
+        '422':
+          description: Validasi gagal atau masih memiliki pengajuan aktif.
+
+        '500':
+          description: Pengajuan KTP gagal diproses.
+
+
+  /pengajuan/ktp/{pengajuanKtp}:
+    get:
+      tags:
+        - Pengajuan KTP
+
+      summary: Mendapatkan detail pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanKtp
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 15
+
+      responses:
+
+        '200':
+          description: Detail pengajuan KTP berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke pengajuan.
+
+        '404':
+          description: Pengajuan KTP tidak ditemukan.
+
+
+  /files/ktp/{dokumen}:
+    get:
+      tags:
+        - Pengajuan KTP
+
+      summary: Mengakses dokumen KTP milik user
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 10
+
+      responses:
+
+        '200':
+          description: File dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke dokumen.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  # ==========================================================================
+  # USER - SKU
+  # ==========================================================================
+
+  /pengajuan/sku:
+    get:
+      tags:
+        - Pengajuan SKU
+
+      summary: Mendapatkan riwayat pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan SKU berhasil diambil.
+
+
+    post:
+      tags:
+        - Pengajuan SKU
+
+      summary: Membuat pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          multipart/form-data:
+
+            schema:
+              type: object
+
+              required:
+                - nik
+                - nama_lengkap
+                - nomor_kk
+                - tempat_lahir
+                - tanggal_lahir
+                - jenis_kelamin
+                - alamat
+                - rt
+                - rw
+                - kode_pos
+                - nama_usaha
+                - jenis_usaha
+                - deskripsi_usaha
+                - alamat_usaha
+                - rt_usaha
+                - rw_usaha
+                - lama_menjalankan_usaha
+                - perkiraan_penghasilan_per_bulan
+                - dokumen
+
+              properties:
+                nik:
+                  type: string
+                  pattern: '^[0-9]{16}$'
+
+                nama_lengkap:
+                  type: string
+                  maxLength: 100
+
+                nomor_kk:
+                  type: string
+                  pattern: '^[0-9]{16}$'
+
+                tempat_lahir:
+                  type: string
+                  maxLength: 100
+
+                tanggal_lahir:
+                  type: string
+                  format: date
+
+                jenis_kelamin:
+                  type: string
+                  enum:
+                    - L
+                    - P
+
+                alamat:
+                  type: string
+
+                rt:
+                  type: string
+                  maxLength: 5
+
+                rw:
+                  type: string
+                  maxLength: 5
+
+                kode_pos:
+                  type: string
+                  maxLength: 5
+
+                nama_usaha:
+                  type: string
+                  maxLength: 150
+
+                jenis_usaha:
+                  type: string
+                  maxLength: 100
+
+                deskripsi_usaha:
+                  type: string
+
+                alamat_usaha:
+                  type: string
+
+                rt_usaha:
+                  type: string
+                  maxLength: 5
+
+                rw_usaha:
+                  type: string
+                  maxLength: 5
+
+                lama_menjalankan_usaha:
+                  type: integer
+                  minimum: 0
+                  maximum: 999
+
+                perkiraan_penghasilan_per_bulan:
+                  type: string
+                  maxLength: 100
+
+                dokumen:
+                  type: object
+
+                  required:
+                    - ktp
+                    - kk
+                    - foto_tempat_usaha
+
+                  properties:
+                    ktp:
+                      type: string
+                      format: binary
+
+                    kk:
+                      type: string
+                      format: binary
+
+                    foto_tempat_usaha:
+                      type: string
+                      format: binary
+
+      responses:
+
+        '201':
+          description: Pengajuan SKU berhasil dibuat.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: User tidak memiliki role user.
+
+        '422':
+          description: Validasi gagal atau masih memiliki pengajuan aktif.
+
+        '500':
+          description: Pengajuan SKU gagal diproses.
+
+
+  /pengajuan/sku/{pengajuanSku}:
+    get:
+      tags:
+        - Pengajuan SKU
+
+      summary: Mendapatkan detail pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanSku
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 8
+
+      responses:
+
+        '200':
+          description: Detail pengajuan SKU berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke pengajuan.
+
+        '404':
+          description: Pengajuan SKU tidak ditemukan.
+
+
+  /files/sku/{dokumen}:
+    get:
+      tags:
+        - Pengajuan SKU
+
+      summary: Mengakses dokumen SKU milik user
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 20
+
+      responses:
+
+        '200':
+          description: File dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke dokumen.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  # ==========================================================================
+  # USER - UMKM
+  # ==========================================================================
+
+  /pengajuan/umkm:
+    get:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Mendapatkan daftar pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan UMKM berhasil diambil.
+
+
+    post:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Membuat pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          multipart/form-data:
+
+            schema:
+              type: object
+
+              required:
+                - nama_umkm
+                - kategori_id
+                - deskripsi_umkm
+                - harga_min
+                - harga_max
+                - alamat
+                - nomor_wa
+                - foto
+
+              properties:
+                nama_umkm:
+                  type: string
+                  maxLength: 150
+
+                kategori_id:
+                  type: integer
+
+                deskripsi_umkm:
+                  type: string
+                  maxLength: 5000
+
+                harga_min:
+                  type: number
+                  format: double
+                  minimum: 0
+
+                harga_max:
+                  type: number
+                  format: double
+                  minimum: 0
+
+                alamat:
+                  type: string
+                  maxLength: 2000
+
+                jam_buka_mulai:
+                  type: string
+                  nullable: true
+
+                jam_buka_selesai:
+                  type: string
+                  nullable: true
+
+                nomor_wa:
+                  type: string
+                  maxLength: 20
+
+                link_ecommerce:
+                  type: string
+                  format: uri
+                  nullable: true
+                  maxLength: 255
+
+                foto:
+                  type: array
+                  minItems: 1
+                  maxItems: 5
+
+                  items:
+                    type: string
+                    format: binary
+
+      responses:
+
+        '201':
+          description: Pengajuan UMKM berhasil dibuat.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: User tidak memiliki role user.
+
+        '422':
+          description: Validasi gagal.
+
+        '500':
+          description: Pengajuan UMKM gagal diproses.
+
+
+  /pengajuan/umkm/{pengajuanUmkm}:
+    get:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Mendapatkan detail pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: Detail pengajuan UMKM berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke UMKM.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+
+    patch:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Memperbarui data UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      requestBody:
+        required: true
+
+        content:
+          multipart/form-data:
+
+            schema:
+              type: object
+
+              required:
+                - nama_umkm
+                - kategori_id
+                - deskripsi_umkm
+                - harga_min
+                - harga_max
+                - alamat
+                - nomor_wa
+
+              properties:
+                nama_umkm:
+                  type: string
+                  maxLength: 150
+
+                kategori_id:
+                  type: integer
+
+                deskripsi_umkm:
+                  type: string
+                  maxLength: 5000
+
+                harga_min:
+                  type: number
+                  format: double
+                  minimum: 0
+
+                harga_max:
+                  type: number
+                  format: double
+                  minimum: 0
+
+                alamat:
+                  type: string
+                  maxLength: 2000
+
+                jam_buka_mulai:
+                  type: string
+                  nullable: true
+
+                jam_buka_selesai:
+                  type: string
+                  nullable: true
+
+                nomor_wa:
+                  type: string
+                  maxLength: 20
+
+                link_ecommerce:
+                  type: string
+                  format: uri
+                  nullable: true
+                  maxLength: 255
+
+                existing_foto_ids:
+                  type: array
+                  nullable: true
+
+                  items:
+                    type: integer
+
+                foto:
+                  type: array
+                  nullable: true
+                  maxItems: 5
+
+                  items:
+                    type: string
+                    format: binary
+
+      responses:
+
+        '200':
+          description: Data UMKM berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke UMKM.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+        '422':
+          description: Validasi gagal.
+
+        '500':
+          description: Data UMKM gagal diperbarui.
+
+
+    delete:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Menghapus UMKM
+
+      description: Soft delete. File fisik foto tidak dihapus.
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: UMKM berhasil dihapus.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke UMKM.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+        '500':
+          description: UMKM gagal dihapus.
+
+
+  /pengajuan/umkm/{pengajuanUmkm}/active:
+    patch:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Mengaktifkan atau menonaktifkan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: Status aktif UMKM berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke UMKM.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+        '422':
+          description: UMKM belum disetujui admin.
+
+        '500':
+          description: Status aktif UMKM gagal diperbarui.
+
+
+  /files/umkm/{foto}:
+    get:
+      tags:
+        - Pengajuan UMKM
+
+      summary: Mengakses foto UMKM milik user
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: foto
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 3
+
+      responses:
+
+        '200':
+          description: Foto berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke foto.
+
+        '404':
+          description: Foto tidak ditemukan.
+
+
+  # ==========================================================================
+  # USER - PENGADUAN
+  # ==========================================================================
+
+  /pengaduan:
+    get:
+      tags:
+        - Pengaduan
+
+      summary: Mendapatkan daftar pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengaduan berhasil diambil.
+
+
+    post:
+      tags:
+        - Pengaduan
+
+      summary: Mengirim pengaduan baru
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          multipart/form-data:
+
+            schema:
+              type: object
+
+              required:
+                - nama
+                - nomor
+                - subjek
+                - keterangan
+                - lokasi
+                - rt
+                - rw
+
+              properties:
+                nama:
+                  type: string
+                  maxLength: 100
+
+                nomor:
+                  type: string
+                  maxLength: 20
+
+                subjek:
+                  type: string
+                  maxLength: 150
+
+                keterangan:
+                  type: string
+
+                lokasi:
+                  type: string
+
+                rt:
+                  type: string
+                  maxLength: 5
+
+                rw:
+                  type: string
+                  maxLength: 5
+
+                foto_bukti:
+                  type: string
+                  format: binary
+                  nullable: true
+
+                dokumen:
+                  type: array
+                  nullable: true
+                  maxItems: 5
+
+                  items:
+                    type: string
+                    format: binary
+
+      responses:
+
+        '201':
+          description: Pengaduan berhasil dikirim.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: User tidak memiliki role user.
+
+        '422':
+          description: Validasi gagal.
+
+        '500':
+          description: Pengaduan gagal diproses.
+
+
+  /pengaduan/{pengaduan}:
+    get:
+      tags:
+        - Pengaduan
+
+      summary: Mendapatkan detail pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      responses:
+
+        '200':
+          description: Detail pengaduan berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke pengaduan.
+
+        '404':
+          description: Pengaduan tidak ditemukan.
+
+
+  /files/pengaduan/{dokumen}:
+    get:
+      tags:
+        - Pengaduan
+
+      summary: Mengakses dokumen pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 12
+
+      responses:
+
+        '200':
+          description: Dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke dokumen.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  /files/pengaduan/{pengaduan}/foto:
+    get:
+      tags:
+        - Pengaduan
+
+      summary: Mengakses foto bukti pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      responses:
+
+        '200':
+          description: Foto bukti berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses ke foto.
+
+        '404':
+          description: Foto bukti tidak ditemukan.
+
+
+  # ==========================================================================
+  # ADMIN - PENGAJUAN KTP
+  # ==========================================================================
+
+  /admin/pengajuan/ktp:
+    get:
+      tags:
+        - Admin Pengajuan KTP
+
+      summary: Mendapatkan seluruh pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan KTP berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+
+  /admin/pengajuan/ktp/{pengajuanKtp}:
+    get:
+      tags:
+        - Admin Pengajuan KTP
+
+      summary: Mendapatkan detail pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanKtp
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 15
+
+      responses:
+
+        '200':
+          description: Detail pengajuan KTP berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses Admin/Super Admin.
+
+        '404':
+          description: Pengajuan KTP tidak ditemukan.
+
+
+  /admin/pengajuan/ktp/{pengajuanKtp}/status:
+    patch:
+      tags:
+        - Admin Pengajuan KTP
+
+      summary: Mengubah status pengajuan KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanKtp
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 15
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - status
+
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - diproses
+                    - disetujui
+                    - ditolak
+                  example: disetujui
+
+                catatan_admin:
+                  type: string
+                  nullable: true
+                  maxLength: 5000
+                  example: Dokumen telah diverifikasi dan pengajuan disetujui.
+
+      responses:
+
+        '200':
+          description: Status pengajuan KTP berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengajuan KTP tidak ditemukan.
+
+        '422':
+          description: Status tidak valid atau transisi tidak diperbolehkan.
+
+        '500':
+          description: Status pengajuan KTP gagal diperbarui.
+
+
+  /admin/files/ktp/{dokumen}:
+    get:
+      tags:
+        - Admin Pengajuan KTP
+
+      summary: Mengakses dokumen KTP
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 20
+
+      responses:
+
+        '200':
+          description: File dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  # ==========================================================================
+  # ADMIN - PENGAJUAN SKU
+  # ==========================================================================
+
+  /admin/pengajuan/sku:
+    get:
+      tags:
+        - Admin Pengajuan SKU
+
+      summary: Mendapatkan seluruh pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan SKU berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+
+  /admin/pengajuan/sku/{pengajuanSku}:
+    get:
+      tags:
+        - Admin Pengajuan SKU
+
+      summary: Mendapatkan detail pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanSku
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 8
+
+      responses:
+
+        '200':
+          description: Detail pengajuan SKU berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses Admin/Super Admin.
+
+        '404':
+          description: Pengajuan SKU tidak ditemukan.
+
+
+  /admin/pengajuan/sku/{pengajuanSku}/status:
+    patch:
+      tags:
+        - Admin Pengajuan SKU
+
+      summary: Mengubah status pengajuan SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanSku
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 8
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - status
+
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - diproses
+                    - disetujui
+                    - ditolak
+                  example: disetujui
+
+                catatan_admin:
+                  type: string
+                  nullable: true
+                  maxLength: 5000
+                  example: Dokumen telah diverifikasi dan pengajuan disetujui.
+
+      responses:
+
+        '200':
+          description: Status pengajuan SKU berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengajuan SKU tidak ditemukan.
+
+        '422':
+          description: Status tidak valid atau transisi tidak diperbolehkan.
+
+        '500':
+          description: Status pengajuan SKU gagal diperbarui.
+
+
+  /admin/files/sku/{dokumen}:
+    get:
+      tags:
+        - Admin Pengajuan SKU
+
+      summary: Mengakses dokumen SKU
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 20
+
+      responses:
+
+        '200':
+          description: File dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  # ==========================================================================
+  # ADMIN - PENGAJUAN UMKM
+  # ==========================================================================
+
+  /admin/pengajuan/umkm:
+    get:
+      tags:
+        - Admin Pengajuan UMKM
+
+      summary: Mendapatkan seluruh pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengajuan UMKM berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+
+  /admin/pengajuan/umkm/{pengajuanUmkm}:
+    get:
+      tags:
+        - Admin Pengajuan UMKM
+
+      summary: Mendapatkan detail pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+
+        '200':
+          description: Detail pengajuan UMKM berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki akses Admin/Super Admin.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+
+  /admin/pengajuan/umkm/{pengajuanUmkm}/status:
+    patch:
+      tags:
+        - Admin Pengajuan UMKM
+
+      summary: Mengubah status pengajuan UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengajuanUmkm
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 1
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - status
+
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - diproses
+                    - disetujui
+                    - ditolak
+                  example: disetujui
+
+                catatan_admin:
+                  type: string
+                  nullable: true
+                  maxLength: 5000
+                  example: Dokumen telah diverifikasi dan pengajuan disetujui.
+
+      responses:
+
+        '200':
+          description: Status pengajuan UMKM berhasil diperbarui.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengajuan UMKM tidak ditemukan.
+
+        '422':
+          description: Status tidak valid atau transisi tidak diperbolehkan.
+
+        '500':
+          description: Status pengajuan UMKM gagal diperbarui.
+
+
+  /admin/files/umkm/{foto}:
+    get:
+      tags:
+        - Admin Pengajuan UMKM
+
+      summary: Mengakses foto UMKM
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: foto
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 3
+
+      responses:
+
+        '200':
+          description: Foto berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Foto tidak ditemukan.
+
+
+  # ==========================================================================
+  # ADMIN - PENGADUAN
+  # ==========================================================================
+
+  /admin/pengaduan:
+    get:
+      tags:
+        - Admin Pengaduan
+
+      summary: Mendapatkan seluruh pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+
+      responses:
+
+        '200':
+          description: Daftar pengaduan berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+
+  /admin/pengaduan/{pengaduan}:
+    get:
+      tags:
+        - Admin Pengaduan
+
+      summary: Mendapatkan detail pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      responses:
+
+        '200':
+          description: Detail pengaduan berhasil diambil.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengaduan tidak ditemukan.
+
+
+  /admin/pengaduan/{pengaduan}/respon:
+    post:
+      tags:
+        - Admin Pengaduan
+
+      summary: Menambahkan respons petugas
+
+      description: |
+        Pengaduan dengan status selesai tidak dapat menerima respons baru.
+        Menambahkan respons tidak otomatis mengubah status pengaduan.
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - respon
+
+              properties:
+                respon:
+                  type: string
+                  maxLength: 5000
+                  example: Laporan telah diterima dan akan segera ditindaklanjuti.
+
+      responses:
+
+        '201':
+          description: Respons petugas berhasil ditambahkan.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Respons petugas berhasil ditambahkan.
+
+                  data:
+                    type: object
+
+                    properties:
+                      id:
+                        type: integer
+                        example: 7
+
+                      user_id:
+                        type: integer
+                        example: 2
+
+                      respon:
+                        type: string
+                        example: Laporan telah diterima dan akan segera ditindaklanjuti.
+
+                      created_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+                        example: '2026-09-14T10:30:00.000000Z'
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengaduan tidak ditemukan.
+
+        '422':
+          description: Pengaduan sudah selesai atau validasi gagal.
+
+        '500':
+          description: Respons petugas gagal ditambahkan.
+
+
+  /admin/pengaduan/{pengaduan}/status:
+    patch:
+      tags:
+        - Admin Pengaduan
+
+      summary: Mengubah status pengaduan
+
+      description: |
+        Workflow status:
+        terkirim -> diteruskan -> selesai
+
+        Status selesai merupakan status final.
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              required:
+                - status
+
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - diteruskan
+                    - selesai
+                  example: diteruskan
+
+      responses:
+
+        '200':
+          description: Status pengaduan berhasil diperbarui.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  message:
+                    type: string
+                    example: Status pengaduan berhasil diperbarui.
+
+                  data:
+                    $ref: '#/components/schemas/AdminPengaduan'
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Pengaduan tidak ditemukan.
+
+        '422':
+          description: Status tidak valid atau transisi tidak diperbolehkan.
+
+        '500':
+          description: Status pengaduan gagal diperbarui.
+
+
+  /admin/files/pengaduan/{dokumen}:
+    get:
+      tags:
+        - Admin Pengaduan
+
+      summary: Mengakses dokumen pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: dokumen
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 12
+
+      responses:
+
+        '200':
+          description: Dokumen berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Dokumen tidak ditemukan.
+
+
+  /admin/files/pengaduan/{pengaduan}/foto:
+    get:
+      tags:
+        - Admin Pengaduan
+
+      summary: Mengakses foto bukti pengaduan
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: pengaduan
+          in: path
+          required: true
+
+          schema:
+            type: integer
+            example: 5
+
+      responses:
+
+        '200':
+          description: Foto bukti berhasil ditampilkan.
+
+        '401':
+          description: Tidak terautentikasi.
+
+        '403':
+          description: Tidak memiliki role admin atau superadmin.
+
+        '404':
+          description: Foto bukti tidak ditemukan.

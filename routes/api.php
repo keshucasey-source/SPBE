@@ -20,6 +20,7 @@ use App\Http\Controllers\KategoriUmkmController;
 use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\PengajuanKtpController;
+use App\Http\Controllers\PengajuanPdfController;
 use App\Http\Controllers\PengajuanSkuController;
 use App\Http\Controllers\PengajuanUmkmController;
 use App\Http\Controllers\PerangkatDesaController;
@@ -454,6 +455,17 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
+    | Cetak PDF Pengajuan KTP - User
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/pengajuan/ktp/{pengajuanKtp}/pdf',
+        [PengajuanPdfController::class, 'ktp']
+    )->name('pengajuan.ktp.pdf');
+
+    /*
+    |--------------------------------------------------------------------------
     | Pengajuan SKU - User
     |--------------------------------------------------------------------------
     */
@@ -472,6 +484,17 @@ Route::middleware([
         '/pengajuan/sku/{pengajuanSku}',
         [PengajuanSkuController::class, 'show']
     )->name('pengajuan.sku.show');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cetak PDF Pengajuan SKU - User
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/pengajuan/sku/{pengajuanSku}/pdf',
+        [PengajuanPdfController::class, 'sku']
+    )->name('pengajuan.sku.pdf');
 
     /*
     |--------------------------------------------------------------------------
