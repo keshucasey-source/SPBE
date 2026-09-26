@@ -4,372 +4,802 @@
     <meta charset="UTF-8">
 
     <title>
-        Tiket Pengajuan KTP - {{ $pengajuan->no_antrian }}
+        Formulir Pengajuan KTP - {{ $pengajuan->no_antrian }}
     </title>
 
     <style>
         @page {
-            margin: 30px;
+            size: A4;
+            margin: 25px 28px 25px 28px;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: DejaVu Sans, sans-serif;
-            color: #222;
-            font-size: 12px;
-            line-height: 1.5;
+            color: #000;
+            font-size: 9px;
+            line-height: 1.35;
+            margin: 0;
+            padding: 0;
         }
 
-        .container {
+        .page {
             width: 100%;
         }
 
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
         .header {
+            position: relative;
             text-align: center;
-            border-bottom: 2px solid #222;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-        }
-
-        .header-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .header-subtitle {
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .header-description {
-            font-size: 10px;
-            margin-top: 4px;
-            color: #555;
-        }
-
-        .ticket-title {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 18px;
-            text-transform: uppercase;
-        }
-
-        .ticket-number-box {
-            border: 2px solid #222;
-            text-align: center;
-            padding: 12px;
-            margin-bottom: 20px;
-        }
-
-        .ticket-number-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #555;
-            margin-bottom: 4px;
-        }
-
-        .ticket-number {
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .section {
-            margin-bottom: 18px;
-        }
-
-        .section-title {
-            font-size: 12px;
-            font-weight: bold;
-            background: #eeeeee;
-            border-left: 4px solid #222;
-            padding: 7px 9px;
             margin-bottom: 8px;
         }
 
-        table {
+        .form-code {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: 1px solid #000;
+            padding: 3px 7px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .header-subtitle {
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .header-description {
+            font-size: 8px;
+            margin-top: 2px;
+        }
+
+        /* =========================================================
+           BOX
+           ========================================================= */
+
+        .box {
+            border: 1px solid #000;
+            width: 100%;
+        }
+
+        .box-title {
+            font-weight: bold;
+            padding: 4px 6px;
+            border-bottom: 1px solid #000;
+            background: #f4f4f4;
+        }
+
+        .box-content {
+            padding: 5px 7px;
+        }
+
+        /* =========================================================
+           PETUNJUK
+           ========================================================= */
+
+        .instruction {
+            margin-top: 7px;
+            margin-bottom: 8px;
+        }
+
+        .instruction ol {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .instruction li {
+            margin-bottom: 1px;
+        }
+
+        /* =========================================================
+           IDENTITAS PEMOHON
+           ========================================================= */
+
+        .identity-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        td {
-            padding: 6px 5px;
+        .identity-table td {
+            padding: 3px 4px;
+            vertical-align: middle;
+        }
+
+        .identity-label {
+            width: 25%;
+            font-weight: bold;
+        }
+
+        .identity-separator {
+            width: 2%;
+            text-align: center;
+        }
+
+        .identity-value {
+            width: 73%;
+            border-bottom: 1px dotted #000;
+            min-height: 15px;
+        }
+
+        /* =========================================================
+           CHECKBOX / JENIS PERMOHONAN
+           ========================================================= */
+
+        .checkbox-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .checkbox-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .checkbox-table td {
+            padding: 2px 4px;
+            vertical-align: middle;
+        }
+
+        .checkbox {
+            display: inline-block;
+            width: 11px;
+            height: 11px;
+            border: 1px solid #000;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        .checked {
+            position: relative;
+        }
+
+        .checked:after {
+            content: "✓";
+            font-size: 10px;
+            font-weight: bold;
+            position: absolute;
+            left: 1px;
+            top: -2px;
+        }
+
+        /* =========================================================
+           FORM TABLE
+           ========================================================= */
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .form-table th,
+        .form-table td {
+            border: 1px solid #000;
+            padding: 4px 5px;
             vertical-align: top;
         }
 
-        .label {
-            width: 35%;
+        .form-table th {
+            text-align: center;
             font-weight: bold;
         }
 
-        .separator {
-            width: 3%;
+        .number-column {
+            width: 5%;
             text-align: center;
         }
 
-        .value {
-            width: 62%;
-        }
-
-        .status {
-            border: 1px solid #222;
-            text-align: center;
-            padding: 8px;
+        .field-column {
+            width: 29%;
             font-weight: bold;
-            font-size: 13px;
-            margin-top: 5px;
         }
 
-        .notice {
-            border: 1px solid #999;
-            padding: 10px;
-            margin-top: 18px;
-            font-size: 10px;
-            color: #444;
+        .value-column {
+            width: 66%;
         }
 
-        .footer {
-            margin-top: 28px;
-            text-align: center;
-            font-size: 9px;
-            color: #666;
+        .field-value {
+            min-height: 12px;
         }
 
-        .signature {
-            margin-top: 35px;
+        /* =========================================================
+           SERVICE / TICKET
+           ========================================================= */
+
+        .service-table {
             width: 100%;
+            border-collapse: collapse;
         }
+
+        .service-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .service-label {
+            width: 28%;
+            font-weight: bold;
+        }
+
+        .service-value {
+            width: 72%;
+        }
+
+        .ticket-box {
+            border: 2px solid #000;
+            text-align: center;
+            padding: 7px 5px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        .ticket-label {
+            font-size: 8px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .ticket-number {
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* =========================================================
+           STATUS
+           ========================================================= */
+
+        .status-box {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+            margin-top: 7px;
+        }
+
+        /* =========================================================
+           TANDA TANGAN
+           ========================================================= */
 
         .signature-table {
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
         }
 
-        .signature-left {
-            width: 55%;
-        }
-
-        .signature-right {
-            width: 45%;
+        .signature-table td {
+            width: 50%;
             text-align: center;
+            vertical-align: top;
+            padding: 4px;
         }
 
         .signature-space {
-            height: 55px;
+            height: 48px;
+        }
+
+        /* =========================================================
+           FOOTER / CATATAN
+           ========================================================= */
+
+        .note {
+            border: 1px solid #000;
+            margin-top: 8px;
+            padding: 6px 7px;
+            font-size: 8px;
+        }
+
+        .footer {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 7px;
+        }
+
+        .small {
+            font-size: 7px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="page">
 
-    {{-- Header --}}
+    {{-- =========================================================
+         HEADER
+         ========================================================== --}}
+
     <div class="header">
+
+        <div class="form-code">
+            SPBE-KTP
+        </div>
+
         <div class="header-title">
             PEMERINTAH DESA SUMBERPORONG
         </div>
 
         <div class="header-subtitle">
-            TIKET PELAYANAN MASYARAKAT
+            FORMULIR PENGAJUAN KARTU TANDA PENDUDUK
         </div>
 
         <div class="header-description">
             Sistem Pelayanan Berbasis Elektronik Desa Sumberporong
         </div>
+
     </div>
 
-    {{-- Title --}}
-    <div class="ticket-title">
-        Tiket Pengajuan KTP
-    </div>
+    {{-- =========================================================
+         PETUNJUK
+         ========================================================== --}}
 
-    {{-- Nomor Tiket --}}
-    <div class="ticket-number-box">
+    <div class="box instruction">
 
-        <div class="ticket-number-label">
-            Nomor Antrean
+        <div class="box-title">
+            PETUNJUK
         </div>
 
-        <div class="ticket-number">
-            {{ $pengajuan->no_antrian }}
+        <div class="box-content">
+
+            <ol>
+                <li>
+                    Harap isi data dengan benar dan lengkap.
+                </li>
+
+                <li>
+                    Dokumen persyaratan harus sesuai dengan jenis permohonan.
+                </li>
+
+                <li>
+                    Pemohon wajib hadir sesuai jadwal pelayanan yang tercantum pada tiket.
+                </li>
+            </ol>
+
         </div>
 
     </div>
 
-    {{-- Data Pemohon --}}
-    <div class="section">
+    {{-- =========================================================
+         JENIS PERMOHONAN
+         ========================================================== --}}
 
-        <div class="section-title">
+    <div class="box">
+
+        <div class="box-title">
+            JENIS PERMOHONAN KTP
+        </div>
+
+        <div class="box-content">
+
+            <table class="checkbox-table">
+
+                <tr>
+
+                    <td style="width: 33%;">
+                        <span class="checkbox
+                            {{ $pengajuan->jenis_permohonan === 'baru' ? 'checked' : '' }}">
+                        </span>
+                        A. Baru
+                    </td>
+
+                    <td style="width: 33%;">
+                        <span class="checkbox
+                            {{ $pengajuan->jenis_permohonan === 'perpanjangan' ? 'checked' : '' }}">
+                        </span>
+                        B. Perpanjangan
+                    </td>
+
+                    <td style="width: 34%;">
+                        <span class="checkbox
+                            {{ $pengajuan->jenis_permohonan === 'hilang' ? 'checked' : '' }}">
+                        </span>
+                        C. Penggantian / Hilang
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{-- =========================================================
+         DATA PEMOHON
+         ========================================================== --}}
+
+    <div class="box" style="margin-top: 8px;">
+
+        <div class="box-title">
             DATA PEMOHON
         </div>
 
-        <table>
-            <tr>
-                <td class="label">
-                    Nama Lengkap
-                </td>
+        <div class="box-content" style="padding: 0;">
 
-                <td class="separator">
-                    :
-                </td>
+            <table class="form-table">
 
-                <td class="value">
+                <tr>
+
+                    <td class="number-column">
+                        1
+                    </td>
+
+                    <td class="field-column">
+                        NAMA LENGKAP
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->nama_lengkap }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        2
+                    </td>
+
+                    <td class="field-column">
+                        NIK
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->nik }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        3
+                    </td>
+
+                    <td class="field-column">
+                        NOMOR KARTU KELUARGA
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->nomor_kk }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        4
+                    </td>
+
+                    <td class="field-column">
+                        TEMPAT, TANGGAL LAHIR
+                    </td>
+
+                    <td class="value-column">
+
+                        {{ $pengajuan->tempat_lahir }}
+
+                        @if ($pengajuan->tanggal_lahir)
+                            ,
+                            {{ $pengajuan->tanggal_lahir
+                                ->locale('id')
+                                ->translatedFormat('d F Y') }}
+                        @endif
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        5
+                    </td>
+
+                    <td class="field-column">
+                        JENIS KELAMIN
+                    </td>
+
+                    <td class="value-column">
+
+                        <span class="checkbox
+                            {{ $pengajuan->jenis_kelamin === 'L' ? 'checked' : '' }}">
+                        </span>
+                        Laki-laki
+
+                        &nbsp;&nbsp;&nbsp;
+
+                        <span class="checkbox
+                            {{ $pengajuan->jenis_kelamin === 'P' ? 'checked' : '' }}">
+                        </span>
+                        Perempuan
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        6
+                    </td>
+
+                    <td class="field-column">
+                        ALAMAT
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->alamat }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        7
+                    </td>
+
+                    <td class="field-column">
+                        RT / RW
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->rt }}
+                        /
+                        {{ $pengajuan->rw }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        8
+                    </td>
+
+                    <td class="field-column">
+                        KODE POS
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->kode_pos }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="number-column">
+                        9
+                    </td>
+
+                    <td class="field-column">
+                        KEPERLUAN
+                    </td>
+
+                    <td class="value-column">
+                        {{ $pengajuan->keperluan }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{-- =========================================================
+         TIKET PELAYANAN
+         ========================================================== --}}
+
+    <div class="box" style="margin-top: 8px;">
+
+        <div class="box-title">
+            DATA PELAYANAN
+        </div>
+
+        <div class="box-content">
+
+            <div class="ticket-box">
+
+                <div class="ticket-label">
+                    NOMOR ANTREAN
+                </div>
+
+                <div class="ticket-number">
+                    {{ $pengajuan->no_antrian }}
+                </div>
+
+            </div>
+
+            <table class="service-table">
+
+                <tr>
+
+                    <td class="service-label">
+                        Status Pengajuan
+                    </td>
+
+                    <td class="service-value">
+                        DISETUJUI
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="service-label">
+                        Tanggal Approval
+                    </td>
+
+                    <td class="service-value">
+
+                        {{ $pengajuan->approved_at
+                            ? $pengajuan->approved_at
+                                ->locale('id')
+                                ->translatedFormat('d F Y, H:i') . ' WIB'
+                            : '-' }}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="service-label">
+                        Tanggal Kunjungan
+                    </td>
+
+                    <td class="service-value">
+
+                        {{ $pengajuan->visit_date
+                            ? $pengajuan->visit_date
+                                ->locale('id')
+                                ->translatedFormat('l, d F Y')
+                            : '-' }}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="service-label">
+                        Jam Pelayanan
+                    </td>
+
+                    <td class="service-value">
+                        08.30 - 13.00 WIB
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="service-label">
+                        Berlaku Sampai
+                    </td>
+
+                    <td class="service-value">
+
+                        {{ $pengajuan->expired_at
+                            ? $pengajuan->expired_at
+                                ->locale('id')
+                                ->translatedFormat('d F Y, H:i') . ' WIB'
+                            : '-' }}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+            <div class="status-box">
+                PENGAJUAN TELAH DISETUJUI
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- =========================================================
+         CATATAN
+         ========================================================== --}}
+
+    <div class="note">
+
+        <strong>CATATAN:</strong>
+
+        <ol style="margin: 3px 0 0 15px; padding: 0;">
+
+            <li>
+                Pemohon wajib membawa dokumen persyaratan asli saat datang ke kantor desa.
+            </li>
+
+            <li>
+                Pemohon wajib hadir pada tanggal dan jam pelayanan yang tercantum dalam formulir ini.
+            </li>
+
+            <li>
+                Tiket ini merupakan bukti persetujuan pengajuan KTP dan bukan merupakan dokumen KTP.
+            </li>
+
+        </ol>
+
+    </div>
+
+    {{-- =========================================================
+         TANDA TANGAN
+         ========================================================== --}}
+
+    <table class="signature-table">
+
+        <tr>
+
+            <td>
+
+                Pemohon,
+
+                <div class="signature-space">
+                </div>
+
+                <strong>
                     {{ $pengajuan->nama_lengkap }}
-                </td>
-            </tr>
+                </strong>
 
-            <tr>
-                <td class="label">
-                    Jenis Permohonan
-                </td>
+            </td>
 
-                <td class="separator">
-                    :
-                </td>
+            <td>
 
-                <td class="value">
-                    {{ ucfirst($pengajuan->jenis_permohonan) }}
-                </td>
-            </tr>
-        </table>
+                Mengetahui,
 
-    </div>
+                <br>
 
-    {{-- Jadwal Pelayanan --}}
-    <div class="section">
+                Petugas Pelayanan Desa Sumberporong
 
-        <div class="section-title">
-            JADWAL PELAYANAN
-        </div>
+                <div class="signature-space">
+                </div>
 
-        <table>
+                <strong>
+                    Petugas Pelayanan
+                </strong>
 
-            <tr>
-                <td class="label">
-                    Tanggal Kunjungan
-                </td>
+            </td>
 
-                <td class="separator">
-                    :
-                </td>
+        </tr>
 
-                <td class="value">
-                    {{ $pengajuan->visit_date
-                        ? $pengajuan->visit_date
-                            ->locale('id')
-                            ->translatedFormat('l, d F Y')
-                        : '-' }}
-                </td>
-            </tr>
+    </table>
 
-            <tr>
-                <td class="label">
-                    Jam Pelayanan
-                </td>
+    {{-- =========================================================
+         FOOTER
+         ========================================================== --}}
 
-                <td class="separator">
-                    :
-                </td>
-
-                <td class="value">
-                    08.30 - 13.00 WIB
-                </td>
-            </tr>
-
-            <tr>
-                <td class="label">
-                    Tanggal Approval
-                </td>
-
-                <td class="separator">
-                    :
-                </td>
-
-                <td class="value">
-                    {{ $pengajuan->approved_at
-                        ? $pengajuan->approved_at
-                            ->locale('id')
-                            ->translatedFormat('d F Y, H:i') . ' WIB'
-                        : '-' }}
-                </td>
-            </tr>
-
-            <tr>
-                <td class="label">
-                    Berlaku Sampai
-                </td>
-
-                <td class="separator">
-                    :
-                </td>
-
-                <td class="value">
-                    {{ $pengajuan->expired_at
-                        ? $pengajuan->expired_at
-                            ->locale('id')
-                            ->translatedFormat('d F Y, H:i') . ' WIB'
-                        : '-' }}
-                </td>
-            </tr>
-
-        </table>
-
-    </div>
-
-    {{-- Status --}}
-    <div class="section">
-
-        <div class="section-title">
-            STATUS PENGAJUAN
-        </div>
-
-        <div class="status">
-            DISETUJUI
-        </div>
-
-    </div>
-
-    {{-- Catatan --}}
-    <div class="notice">
-        <strong>Catatan:</strong><br>
-
-        Harap membawa dokumen persyaratan yang diperlukan
-        ketika datang ke kantor desa sesuai dengan jadwal
-        pelayanan yang tercantum pada tiket ini.
-
-        Tiket ini merupakan bukti bahwa pengajuan KTP
-        telah disetujui dan memiliki jadwal pelayanan.
-    </div>
-
-    {{-- Signature --}}
-    <div class="signature">
-
-        <table class="signature-table">
-            <tr>
-
-                <td class="signature-left">
-                </td>
-
-                <td class="signature-right">
-
-                    Desa Sumberporong
-
-                    <div class="signature-space">
-                    </div>
-
-                    <strong>
-                        Petugas Pelayanan
-                    </strong>
-
-                </td>
-
-            </tr>
-        </table>
-
-    </div>
-
-    {{-- Footer --}}
     <div class="footer">
 
         Dokumen ini dibuat secara elektronik melalui
@@ -377,7 +807,7 @@
 
         <br>
 
-        Nomor tiket:
+        Nomor antrean:
         {{ $pengajuan->no_antrian }}
 
     </div>
