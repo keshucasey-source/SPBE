@@ -359,7 +359,7 @@
                 <td class="value">
                     Rp
                     {{ number_format(
-                        $pengajuan->perkiraan_penghasilan_per_bulan,
+                        (float) $pengajuan->perkiraan_penghasilan_per_bulan,
                         0,
                         ',',
                         '.'
