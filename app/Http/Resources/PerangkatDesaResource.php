@@ -22,6 +22,12 @@ class PerangkatDesaResource extends JsonResource
             'jabatan' =>
                 $this->jabatan,
 
+            'kategori' =>
+                $this->kategori,
+
+            'nama_organisasi' =>
+                $this->nama_organisasi,
+
             /*
             |--------------------------------------------------------------------------
             | FOTO
@@ -29,7 +35,7 @@ class PerangkatDesaResource extends JsonResource
             |
             | Jangan kirim path storage mentah seperti:
             |
-            | perangkat-desa/abc.jpg
+            | perangkat-desa/abc123.jpg
             |
             | Kirim URL endpoint publik.
             |

@@ -21,6 +21,8 @@ class PerangkatDesa extends Model
     protected $fillable = [
         'nama',
         'jabatan',
+        'kategori',
+        'nama_organisasi',
         'foto',
         'urutan',
         'is_active',

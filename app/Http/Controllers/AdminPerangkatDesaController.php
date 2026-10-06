@@ -67,6 +67,19 @@ class AdminPerangkatDesaController extends Controller
                     'max:150',
                 ],
 
+                'kategori' => [
+                    'required',
+                    'string',
+                    'in:perangkat_desa,bpd,organisasi_masyarakat',
+                ],
+
+                'nama_organisasi' => [
+                    'nullable',
+                    'string',
+                    'max:150',
+                    'required_if:kategori,organisasi_masyarakat',
+                ],
+
                 'foto' => [
                     'required',
                     'file',
@@ -114,6 +127,15 @@ class AdminPerangkatDesaController extends Controller
 
                 'jabatan' =>
                     $validated['jabatan'],
+
+                'kategori' =>
+                    $validated['kategori'],
+
+                'nama_organisasi' =>
+                    $validated['kategori'] ===
+                    'organisasi_masyarakat'
+                        ? $validated['nama_organisasi']
+                        : null,
 
                 'foto' =>
                     $fotoPath,
@@ -208,6 +230,19 @@ class AdminPerangkatDesaController extends Controller
                     'max:150',
                 ],
 
+                'kategori' => [
+                    'required',
+                    'string',
+                    'in:perangkat_desa,bpd,organisasi_masyarakat',
+                ],
+
+                'nama_organisasi' => [
+                    'nullable',
+                    'string',
+                    'max:150',
+                    'required_if:kategori,organisasi_masyarakat',
+                ],
+
                 'foto' => [
                     'nullable',
                     'file',
@@ -239,6 +274,15 @@ class AdminPerangkatDesaController extends Controller
 
         $perangkatDesa->jabatan =
             $validated['jabatan'];
+
+        $perangkatDesa->kategori =
+            $validated['kategori'];
+
+        $perangkatDesa->nama_organisasi =
+            $validated['kategori'] ===
+            'organisasi_masyarakat'
+                ? $validated['nama_organisasi']
+                : null;
 
         if (
             array_key_exists(
