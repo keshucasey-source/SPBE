@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Fasilitas;
 use App\Models\Galeri;
 use App\Models\HeroSlide;
 use App\Models\Pengaduan;
@@ -182,6 +183,29 @@ class PrivateFileController extends Controller
     }
 
     /**
+     * Menampilkan foto fasilitas yang aktif untuk publik.
+     *
+     * Endpoint:
+     *
+     * GET /api/files/public/fasilitas/{fasilitas}
+     */
+    public function publicFasilitas(
+        Fasilitas $fasilitas
+    ): BinaryFileResponse {
+        abort_unless(
+            $fasilitas->is_active === true &&
+            filled($fasilitas->foto),
+            404,
+            'Foto fasilitas tidak ditemukan.'
+        );
+
+        return $this->serveFile(
+            $fasilitas->foto,
+            'fasilitas-' . $fasilitas->id
+        );
+    }
+
+    /**
      * Menampilkan gambar galeri untuk publik.
      *
      * Endpoint:
@@ -301,6 +325,30 @@ class PrivateFileController extends Controller
         return $this->serveFile(
             $perangkatDesa->foto,
             'perangkat-desa-' . $perangkatDesa->id
+        );
+    }
+
+    /**
+     * Menampilkan foto fasilitas untuk Admin / Super Admin.
+     *
+     * Endpoint:
+     *
+     * GET /api/admin/files/fasilitas/{fasilitas}
+     */
+    public function adminFasilitas(
+        Fasilitas $fasilitas
+    ): BinaryFileResponse {
+        $this->authorizeAdminAccess();
+
+        abort_unless(
+            filled($fasilitas->foto),
+            404,
+            'Foto fasilitas tidak ditemukan.'
+        );
+
+        return $this->serveFile(
+            $fasilitas->foto,
+            'fasilitas-' . $fasilitas->id
         );
     }
 

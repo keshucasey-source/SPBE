@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminBeritaController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminFasilitasController;
 use App\Http\Controllers\AdminGaleriController;
 use App\Http\Controllers\AdminHeroController;
 use App\Http\Controllers\AdminKritikSaranController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\AdminSambutanController;
 use App\Http\Controllers\AdminStatistikController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BeritaPublicController;
+use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\GaleriPublicController;
 use App\Http\Controllers\HeroPublicController;
 use App\Http\Controllers\KategoriUmkmController;
@@ -250,6 +252,53 @@ Route::get(
     '/files/public/perangkat-desa/{perangkatDesa}',
     [PrivateFileController::class, 'publicPerangkatDesa']
 )->name('public.files.perangkat-desa');
+
+/*
+|--------------------------------------------------------------------------
+| Public Fasilitas
+|--------------------------------------------------------------------------
+|
+| Tidak membutuhkan login.
+|
+| Hanya fasilitas dengan:
+| is_active = true
+|
+| yang ditampilkan ke publik.
+|
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Daftar Fasilitas Public
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/fasilitas',
+    [FasilitasController::class, 'index']
+)->name('public.fasilitas.index');
+
+/*
+|--------------------------------------------------------------------------
+| Detail Fasilitas Public
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/fasilitas/{fasilitas}',
+    [FasilitasController::class, 'show']
+)->name('public.fasilitas.show');
+
+/*
+|--------------------------------------------------------------------------
+| Foto Fasilitas Public
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/files/public/fasilitas/{fasilitas}',
+    [PrivateFileController::class, 'publicFasilitas']
+)->name('public.files.fasilitas');
 
 /*
 |--------------------------------------------------------------------------
@@ -597,6 +646,7 @@ Route::middleware([
 | - Berita
 | - Statistik
 | - Perangkat Desa
+| - Fasilitas
 | - Galeri
 | - Kritik & Saran
 | - Pengajuan KTP
@@ -824,69 +874,30 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Daftar
-        |--------------------------------------------------------------------------
-        */
-
         Route::get(
             '/perangkat-desa',
             [AdminPerangkatDesaController::class, 'index']
         )->name('admin.perangkat-desa.index');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Tambah
-        |--------------------------------------------------------------------------
-        */
 
         Route::post(
             '/perangkat-desa',
             [AdminPerangkatDesaController::class, 'store']
         )->name('admin.perangkat-desa.store');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Detail
-        |--------------------------------------------------------------------------
-        */
-
         Route::get(
             '/perangkat-desa/{perangkatDesa}',
             [AdminPerangkatDesaController::class, 'show']
         )->name('admin.perangkat-desa.show');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update
-        |--------------------------------------------------------------------------
-        |
-        | POST dipakai karena multipart/form-data.
-        |
-        */
 
         Route::post(
             '/perangkat-desa/{perangkatDesa}',
             [AdminPerangkatDesaController::class, 'update']
         )->name('admin.perangkat-desa.update');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Hapus
-        |--------------------------------------------------------------------------
-        */
-
         Route::delete(
             '/perangkat-desa/{perangkatDesa}',
             [AdminPerangkatDesaController::class, 'destroy']
         )->name('admin.perangkat-desa.destroy');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Toggle Active
-        |--------------------------------------------------------------------------
-        */
 
         Route::patch(
             '/perangkat-desa/{perangkatDesa}/active',
@@ -906,13 +917,93 @@ Route::middleware([
 
         /*
         |--------------------------------------------------------------------------
-        | Galeri
+        | Fasilitas
         |--------------------------------------------------------------------------
         */
 
         /*
         |--------------------------------------------------------------------------
-        | Daftar Galeri
+        | Daftar Fasilitas
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/fasilitas',
+            [AdminFasilitasController::class, 'index']
+        )->name('admin.fasilitas.index');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tambah Fasilitas
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/fasilitas',
+            [AdminFasilitasController::class, 'store']
+        )->name('admin.fasilitas.store');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detail Fasilitas
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/fasilitas/{fasilitas}',
+            [AdminFasilitasController::class, 'show']
+        )->name('admin.fasilitas.show');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Fasilitas
+        |--------------------------------------------------------------------------
+        |
+        | POST dipakai karena multipart/form-data.
+        |
+        */
+
+        Route::post(
+            '/fasilitas/{fasilitas}',
+            [AdminFasilitasController::class, 'update']
+        )->name('admin.fasilitas.update');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hapus Fasilitas
+        |--------------------------------------------------------------------------
+        */
+
+        Route::delete(
+            '/fasilitas/{fasilitas}',
+            [AdminFasilitasController::class, 'destroy']
+        )->name('admin.fasilitas.destroy');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Toggle Active
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            '/fasilitas/{fasilitas}/active',
+            [AdminFasilitasController::class, 'toggleActive']
+        )->name('admin.fasilitas.active');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Foto Fasilitas - Admin / Super Admin
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/files/fasilitas/{fasilitas}',
+            [PrivateFileController::class, 'adminFasilitas']
+        )->name('admin.files.fasilitas');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Galeri
         |--------------------------------------------------------------------------
         */
 
@@ -921,44 +1012,20 @@ Route::middleware([
             [AdminGaleriController::class, 'index']
         )->name('admin.galeri.index');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Upload Galeri
-        |--------------------------------------------------------------------------
-        */
-
         Route::post(
             '/galeri',
             [AdminGaleriController::class, 'store']
         )->name('admin.galeri.store');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Detail Galeri
-        |--------------------------------------------------------------------------
-        */
 
         Route::get(
             '/galeri/{galeri}',
             [AdminGaleriController::class, 'show']
         )->name('admin.galeri.show');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update Galeri
-        |--------------------------------------------------------------------------
-        */
-
         Route::post(
             '/galeri/{galeri}',
             [AdminGaleriController::class, 'update']
         )->name('admin.galeri.update');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Hapus Galeri
-        |--------------------------------------------------------------------------
-        */
 
         Route::delete(
             '/galeri/{galeri}',
