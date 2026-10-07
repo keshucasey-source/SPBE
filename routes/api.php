@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminFasilitasController;
 use App\Http\Controllers\AdminGaleriController;
 use App\Http\Controllers\AdminHeroController;
+use App\Http\Controllers\AdminInformasiPajakController;
 use App\Http\Controllers\AdminKritikSaranController;
 use App\Http\Controllers\AdminPengaduanController;
 use App\Http\Controllers\AdminPengajuanKtpController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\BeritaPublicController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\GaleriPublicController;
 use App\Http\Controllers\HeroPublicController;
+use App\Http\Controllers\InformasiPajakController;
 use App\Http\Controllers\KategoriUmkmController;
 use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\PengaduanController;
@@ -299,6 +301,40 @@ Route::get(
     '/files/public/fasilitas/{fasilitas}',
     [PrivateFileController::class, 'publicFasilitas']
 )->name('public.files.fasilitas');
+
+/*
+|--------------------------------------------------------------------------
+| Public Informasi Pajak
+|--------------------------------------------------------------------------
+|
+| Tidak membutuhkan login.
+|
+| Hanya informasi dengan:
+| status = published
+|
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Daftar Informasi Pajak Public
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/informasi-pajak',
+    [InformasiPajakController::class, 'index']
+)->name('public.informasi-pajak.index');
+
+/*
+|--------------------------------------------------------------------------
+| Detail Informasi Pajak Public
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/informasi-pajak/{informasiPajak}',
+    [InformasiPajakController::class, 'show']
+)->name('public.informasi-pajak.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -647,6 +683,7 @@ Route::middleware([
 | - Statistik
 | - Perangkat Desa
 | - Fasilitas
+| - Informasi Pajak
 | - Galeri
 | - Kritik & Saran
 | - Pengajuan KTP
@@ -1000,6 +1037,73 @@ Route::middleware([
             '/files/fasilitas/{fasilitas}',
             [PrivateFileController::class, 'adminFasilitas']
         )->name('admin.files.fasilitas');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Informasi Pajak
+        |--------------------------------------------------------------------------
+        |
+        | Admin dan Super Admin dapat mengelola:
+        | - draft
+        | - published
+        | - archived
+        |
+        */
+
+        /*
+        |--------------------------------------------------------------------------
+        | Daftar Informasi Pajak
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/informasi-pajak',
+            [AdminInformasiPajakController::class, 'index']
+        )->name('admin.informasi-pajak.index');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tambah Informasi Pajak
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/informasi-pajak',
+            [AdminInformasiPajakController::class, 'store']
+        )->name('admin.informasi-pajak.store');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detail Informasi Pajak
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/informasi-pajak/{informasiPajak}',
+            [AdminInformasiPajakController::class, 'show']
+        )->name('admin.informasi-pajak.show');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Informasi Pajak
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            '/informasi-pajak/{informasiPajak}',
+            [AdminInformasiPajakController::class, 'update']
+        )->name('admin.informasi-pajak.update');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hapus Informasi Pajak
+        |--------------------------------------------------------------------------
+        */
+
+        Route::delete(
+            '/informasi-pajak/{informasiPajak}',
+            [AdminInformasiPajakController::class, 'destroy']
+        )->name('admin.informasi-pajak.destroy');
 
         /*
         |--------------------------------------------------------------------------
