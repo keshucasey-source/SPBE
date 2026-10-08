@@ -510,8 +510,11 @@ class PengajuanKtpController extends Controller
             'ktp_lama' =>
                 'ktp_lama',
 
-            'pengantar_rt_rw' =>
-                'pengantar_rt_rw',
+            'pengantar_rt' =>
+                'pengantar_rt',
+
+            'pengantar_rw' =>
+                'pengantar_rw',
 
             'surat_kehilangan_polsek' =>
                 'surat_kehilangan_polsek',

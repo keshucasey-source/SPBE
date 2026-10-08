@@ -116,7 +116,14 @@ class StorePengajuanKtpRequest extends FormRequest
                 'max:5120',
             ],
 
-            'dokumen.pengantar_rt_rw' => [
+            'dokumen.pengantar_rt' => [
+                'nullable',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+            ],
+
+            'dokumen.pengantar_rw' => [
                 'nullable',
                 'file',
                 'mimes:pdf,jpg,jpeg,png',
@@ -169,6 +176,8 @@ class StorePengajuanKtpRequest extends FormRequest
             | Wajib:
             | - KK
             | - Akta Kelahiran ATAU Ijazah
+            | - Pengantar RT
+            | - Pengantar RW
             |--------------------------------------------------------------------------
             */
             if ($jenisPermohonan === 'baru') {
@@ -188,6 +197,20 @@ class StorePengajuanKtpRequest extends FormRequest
                         'Akta kelahiran atau ijazah wajib diunggah untuk pengurusan KTP baru.'
                     );
                 }
+
+                if (! $this->hasFile('dokumen.pengantar_rt')) {
+                    $validator->errors()->add(
+                        'dokumen.pengantar_rt',
+                        'Pengantar RT wajib diunggah untuk pengurusan KTP baru.'
+                    );
+                }
+
+                if (! $this->hasFile('dokumen.pengantar_rw')) {
+                    $validator->errors()->add(
+                        'dokumen.pengantar_rw',
+                        'Pengantar RW wajib diunggah untuk pengurusan KTP baru.'
+                    );
+                }
             }
 
             /*
@@ -197,7 +220,8 @@ class StorePengajuanKtpRequest extends FormRequest
             | Wajib:
             | - KTP lama
             | - KK
-            | - Pengantar RT/RW
+            | - Pengantar RT
+            | - Pengantar RW
             |--------------------------------------------------------------------------
             */
             if ($jenisPermohonan === 'perpanjangan') {
@@ -215,10 +239,17 @@ class StorePengajuanKtpRequest extends FormRequest
                     );
                 }
 
-                if (! $this->hasFile('dokumen.pengantar_rt_rw')) {
+                if (! $this->hasFile('dokumen.pengantar_rt')) {
                     $validator->errors()->add(
-                        'dokumen.pengantar_rt_rw',
-                        'Pengantar RT/RW wajib diunggah untuk pengurusan perpanjangan KTP.'
+                        'dokumen.pengantar_rt',
+                        'Pengantar RT wajib diunggah untuk pengurusan perpanjangan KTP.'
+                    );
+                }
+
+                if (! $this->hasFile('dokumen.pengantar_rw')) {
+                    $validator->errors()->add(
+                        'dokumen.pengantar_rw',
+                        'Pengantar RW wajib diunggah untuk pengurusan perpanjangan KTP.'
                     );
                 }
             }
@@ -230,7 +261,8 @@ class StorePengajuanKtpRequest extends FormRequest
             | Wajib:
             | - KK
             | - Surat Kehilangan Polsek
-            | - Pengantar RT/RW
+            | - Pengantar RT
+            | - Pengantar RW
             |--------------------------------------------------------------------------
             */
             if ($jenisPermohonan === 'hilang') {
@@ -248,10 +280,17 @@ class StorePengajuanKtpRequest extends FormRequest
                     );
                 }
 
-                if (! $this->hasFile('dokumen.pengantar_rt_rw')) {
+                if (! $this->hasFile('dokumen.pengantar_rt')) {
                     $validator->errors()->add(
-                        'dokumen.pengantar_rt_rw',
-                        'Pengantar RT/RW wajib diunggah untuk pengurusan KTP hilang.'
+                        'dokumen.pengantar_rt',
+                        'Pengantar RT wajib diunggah untuk pengurusan KTP hilang.'
+                    );
+                }
+
+                if (! $this->hasFile('dokumen.pengantar_rw')) {
+                    $validator->errors()->add(
+                        'dokumen.pengantar_rw',
+                        'Pengantar RW wajib diunggah untuk pengurusan KTP hilang.'
                     );
                 }
             }
