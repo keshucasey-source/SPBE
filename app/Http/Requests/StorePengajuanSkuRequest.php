@@ -155,6 +155,20 @@ class StorePengajuanSkuRequest extends FormRequest
                 'max:5120',
             ],
 
+            'dokumen.pengantar_rt' => [
+                'required',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+            ],
+
+            'dokumen.pengantar_rw' => [
+                'required',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+            ],
+
             'dokumen.foto_tempat_usaha' => [
                 'required',
                 'file',
@@ -232,6 +246,16 @@ class StorePengajuanSkuRequest extends FormRequest
             'dokumen.kk.file' => 'File KK tidak valid.',
             'dokumen.kk.mimes' => 'KK harus berupa PDF, JPG, JPEG, atau PNG.',
             'dokumen.kk.max' => 'Ukuran KK maksimal 5 MB.',
+
+            'dokumen.pengantar_rt.required' => 'Pengantar RT wajib diunggah.',
+            'dokumen.pengantar_rt.file' => 'File Pengantar RT tidak valid.',
+            'dokumen.pengantar_rt.mimes' => 'Pengantar RT harus berupa PDF, JPG, JPEG, atau PNG.',
+            'dokumen.pengantar_rt.max' => 'Ukuran Pengantar RT maksimal 5 MB.',
+
+            'dokumen.pengantar_rw.required' => 'Pengantar RW wajib diunggah.',
+            'dokumen.pengantar_rw.file' => 'File Pengantar RW tidak valid.',
+            'dokumen.pengantar_rw.mimes' => 'Pengantar RW harus berupa PDF, JPG, JPEG, atau PNG.',
+            'dokumen.pengantar_rw.max' => 'Ukuran Pengantar RW maksimal 5 MB.',
 
             'dokumen.foto_tempat_usaha.required' => 'Foto tempat usaha wajib diunggah.',
             'dokumen.foto_tempat_usaha.file' => 'File foto tempat usaha tidak valid.',
