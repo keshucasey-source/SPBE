@@ -6,6 +6,7 @@ use App\Models\Berita;
 use App\Models\Fasilitas;
 use App\Models\Galeri;
 use App\Models\HeroSlide;
+use App\Models\LaporanKinerjaFoto;
 use App\Models\Pengaduan;
 use App\Models\PengaduanDokumen;
 use App\Models\PengajuanKtpDokumen;
@@ -274,6 +275,40 @@ class PrivateFileController extends Controller
         );
     }
 
+    /**
+     * Menampilkan foto laporan kinerja kepada publik.
+     *
+     * Endpoint:
+     *
+     * GET /api/files/public/laporan-kinerja-foto/{foto}
+     *
+     * Foto hanya bisa diakses jika laporan terkait
+     * memiliki status published.
+     */
+    public function publicLaporanKinerjaFoto(
+        LaporanKinerjaFoto $foto
+    ): BinaryFileResponse {
+        $foto->loadMissing('laporanKinerja');
+
+        $laporan = $foto->laporanKinerja;
+
+        abort_unless(
+            $laporan &&
+            $laporan->status === 'published' &&
+            filled($foto->file_path),
+            404,
+            'Foto laporan kinerja tidak ditemukan.'
+        );
+
+        return $this->serveFile(
+            $foto->file_path,
+            'laporan-kinerja-' .
+                $foto->laporan_kinerja_id .
+                '-' .
+                $foto->id
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN / SUPER ADMIN
@@ -500,6 +535,43 @@ class PrivateFileController extends Controller
         );
     }
 
+    /**
+     * Menampilkan foto laporan kinerja untuk Superadmin.
+     *
+     * Endpoint:
+     *
+     * GET /api/superadmin/files/laporan-kinerja-foto/{foto}
+     *
+     * Superadmin dapat melihat foto laporan berstatus draft
+     * maupun published.
+     */
+    public function superadminLaporanKinerjaFoto(
+        LaporanKinerjaFoto $foto
+    ): BinaryFileResponse {
+        $user = auth()->user();
+
+        abort_unless(
+            $user &&
+            $user->hasRole('superadmin'),
+            403,
+            'Anda tidak memiliki akses ke file ini.'
+        );
+
+        abort_unless(
+            filled($foto->file_path),
+            404,
+            'Foto laporan kinerja tidak ditemukan.'
+        );
+
+        return $this->serveFile(
+            $foto->file_path,
+            'laporan-kinerja-' .
+                $foto->laporan_kinerja_id .
+                '-' .
+                $foto->id
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | OWNERSHIP CHECKS
@@ -641,7 +713,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Validasi Path
+        | VALIDASI PATH
         |--------------------------------------------------------------------------
         */
 
@@ -653,7 +725,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Cek File
+        | CEK FILE
         |--------------------------------------------------------------------------
         */
 
@@ -665,7 +737,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Absolute Path
+        | ABSOLUTE PATH
         |--------------------------------------------------------------------------
         */
 
@@ -679,7 +751,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | MIME Type
+        | MIME TYPE
         |--------------------------------------------------------------------------
         |
         | Jangan gunakan:
@@ -701,7 +773,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Sanitasi Filename
+        | SANITASI FILENAME
         |--------------------------------------------------------------------------
         */
 
@@ -717,7 +789,7 @@ class PrivateFileController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Response
+        | RESPONSE
         |--------------------------------------------------------------------------
         */
 

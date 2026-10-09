@@ -22,6 +22,7 @@ use App\Http\Controllers\HeroPublicController;
 use App\Http\Controllers\InformasiPajakController;
 use App\Http\Controllers\KategoriUmkmController;
 use App\Http\Controllers\KritikSaranController;
+use App\Http\Controllers\LaporanKinerjaController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\PengajuanKtpController;
 use App\Http\Controllers\PengajuanPdfController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\StatistikDesaController;
 use App\Http\Controllers\SuperAdminAuditLogController;
 use App\Http\Controllers\SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdminLaporanKinerjaController;
 use App\Http\Controllers\SuperAdminUserController;
 use App\Http\Controllers\UmkmPublicController;
 use Illuminate\Support\Facades\Route;
@@ -218,6 +220,47 @@ Route::get(
     '/statistik',
     [StatistikDesaController::class, 'show']
 )->name('public.statistik.show');
+
+/*
+|--------------------------------------------------------------------------
+| Public Laporan Kinerja Kepala Desa
+|--------------------------------------------------------------------------
+|
+| Tidak membutuhkan login.
+|
+| GET /api/laporan-kinerja
+| GET /api/laporan-kinerja?tahun=2026
+| GET /api/laporan-kinerja?kategori=pembangunan
+| GET /api/laporan-kinerja/{laporanKinerja}
+|
+| Publik hanya dapat melihat laporan dengan status published.
+|
+*/
+
+Route::get(
+    '/laporan-kinerja',
+    [LaporanKinerjaController::class, 'index']
+)->name('public.laporan-kinerja.index');
+
+Route::get(
+    '/laporan-kinerja/{laporanKinerja}',
+    [LaporanKinerjaController::class, 'show']
+)->name('public.laporan-kinerja.show');
+
+/*
+|--------------------------------------------------------------------------
+| Foto Laporan Kinerja Public
+|--------------------------------------------------------------------------
+|
+| Foto hanya dapat diakses publik jika laporan berstatus published.
+| File tetap disimpan di private/local storage.
+|
+*/
+
+Route::get(
+    '/files/public/laporan-kinerja-foto/{foto}',
+    [PrivateFileController::class, 'publicLaporanKinerjaFoto']
+)->name('public.files.laporan-kinerja-foto');
 
 /*
 |--------------------------------------------------------------------------
@@ -1443,6 +1486,128 @@ Route::middleware([
             '/users/{user}',
             [SuperAdminUserController::class, 'destroy']
         )->name('superadmin.users.destroy');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Laporan Kinerja Kepala Desa
+        |--------------------------------------------------------------------------
+        |
+        | Khusus Super Admin.
+        |
+        | GET    /api/superadmin/laporan-kinerja
+        | POST   /api/superadmin/laporan-kinerja
+        | GET    /api/superadmin/laporan-kinerja/{laporanKinerja}
+        | POST   /api/superadmin/laporan-kinerja/{laporanKinerja}
+        | PUT    /api/superadmin/laporan-kinerja/{laporanKinerja}
+        | PATCH  /api/superadmin/laporan-kinerja/{laporanKinerja}
+        | DELETE /api/superadmin/laporan-kinerja/{laporanKinerja}
+        | PATCH  /api/superadmin/laporan-kinerja/{laporanKinerja}/publish
+        | PATCH  /api/superadmin/laporan-kinerja/{laporanKinerja}/unpublish
+        |
+        */
+
+        /*
+        |--------------------------------------------------------------------------
+        | Daftar Laporan Kinerja
+        |--------------------------------------------------------------------------
+        |
+        | Menampilkan laporan draft maupun published.
+        |
+        */
+
+        Route::get(
+            '/laporan-kinerja',
+            [SuperAdminLaporanKinerjaController::class, 'index']
+        )->name('superadmin.laporan-kinerja.index');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tambah Laporan Kinerja
+        |--------------------------------------------------------------------------
+        |
+        | Mendukung multipart/form-data untuk unggah banyak foto.
+        |
+        */
+
+        Route::post(
+            '/laporan-kinerja',
+            [SuperAdminLaporanKinerjaController::class, 'store']
+        )->name('superadmin.laporan-kinerja.store');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detail Laporan Kinerja
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/laporan-kinerja/{laporanKinerja}',
+            [SuperAdminLaporanKinerjaController::class, 'show']
+        )->name('superadmin.laporan-kinerja.show');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Laporan Kinerja
+        |--------------------------------------------------------------------------
+        |
+        | POST disediakan untuk mendukung multipart/form-data.
+        | PUT dan PATCH juga disediakan untuk update biasa.
+        |
+        */
+
+        Route::match(
+            ['post', 'put', 'patch'],
+            '/laporan-kinerja/{laporanKinerja}',
+            [SuperAdminLaporanKinerjaController::class, 'update']
+        )->name('superadmin.laporan-kinerja.update');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hapus Laporan Kinerja
+        |--------------------------------------------------------------------------
+        */
+
+        Route::delete(
+            '/laporan-kinerja/{laporanKinerja}',
+            [SuperAdminLaporanKinerjaController::class, 'destroy']
+        )->name('superadmin.laporan-kinerja.destroy');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Publikasikan Laporan Kinerja
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            '/laporan-kinerja/{laporanKinerja}/publish',
+            [SuperAdminLaporanKinerjaController::class, 'publish']
+        )->name('superadmin.laporan-kinerja.publish');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tarik Publikasi Laporan Kinerja
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            '/laporan-kinerja/{laporanKinerja}/unpublish',
+            [SuperAdminLaporanKinerjaController::class, 'unpublish']
+        )->name('superadmin.laporan-kinerja.unpublish');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Foto Laporan Kinerja - Super Admin
+        |--------------------------------------------------------------------------
+        |
+        | Foto laporan dapat diakses Super Admin, termasuk ketika
+        | laporan masih berstatus draft.
+        |
+        */
+
+        Route::get(
+            '/files/laporan-kinerja-foto/{foto}',
+            [PrivateFileController::class, 'superadminLaporanKinerjaFoto']
+        )->name('superadmin.files.laporan-kinerja-foto');
 
         /*
         |--------------------------------------------------------------------------
